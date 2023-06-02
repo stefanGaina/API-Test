@@ -2,8 +2,9 @@
 # Module history:                                                                                     #
 #   Date:       Author:                    Reason:                                                    #
 #   02.06.2023  Gaina Stefan               Initial version.                                           #
-# Description: This Makefile is used to generate a dummy library with different types as parameters   #
-# to test the API-Test functionalities.                                                               #
+#   02.06.2023  Gaina Stefan               Fixed copy_libraries rule.                                 #
+# Description: This Makefile is used to generate an example for API-Test loading a dummy library and  #
+# testing its API.                                                                                    #
 #######################################################################################################
 
 CC     = gcc
@@ -22,7 +23,7 @@ SOURCES    := $(wildcard $(SRC)/*.c)
 OBJECTS    := $(patsubst $(SRC)/%.c, $(OBJ)/%.o, $(SOURCES))
 EXECUTABLE := apitest-test.exe
 
-all: | create_dirs $(EXECUTABLE)
+all: | create_dirs $(EXECUTABLE) copy_libraries
 
 ### CREATE DIRS ###
 create_dirs:
@@ -64,11 +65,11 @@ endif
 copy_libraries:
 ifdef OS
 	copy ..\apitest\lib\libapitest.dll bin
-	copy ..\apitest\lib\libdummy.dll bin
+	copy ..\dummy-lib\lib\libdummy.dll bin
 else
 	ifeq ($(shell uname), Linux)
 		cp ../apitest/lib/libapitest.so bin/
-		cp ../apitest/lib/libdummy.so bin/
+		cp ../dummy-lib/lib/libdummy.so bin/
 	else
 		$(error Platform is not supported!)
 	endif
