@@ -7,8 +7,8 @@
 # testing its API.                                                                                    #
 #######################################################################################################
 
-CC     = gcc
-CFLAGS = -Wall -Werror
+CC      = gcc
+CFLAGS  = -Wall -Werror
 LDFLAGS = -L../apitest/lib/ -lapitest \
 		  -L../dummy-lib/lib/ -ldummy
 
