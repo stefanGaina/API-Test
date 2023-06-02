@@ -1,0 +1,16 @@
+cmake_minimum_required(VERSION 3.14 FATAL_ERROR)
+project(API-Test)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fpermissive -w -fno-exceptions -fno-inline")
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_C_COMPILER "gcc")
+set(CMAKE_CXX_COMPILER "g++")
+# include(MemoryCheck)
+# include(TestSupport)
+
+# enable_testing()
+include(CTest)
+
+# add_subdirectory(mocks)
+# if(${UNITTEST})
+	add_subdirectory(unit-tests)
+# endif()

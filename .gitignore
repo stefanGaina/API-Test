@@ -1,0 +1,17 @@
+# VSCode settings
+.vscode
+
+# Objects
+*.o
+
+# Libraries
+*.lib
+*.a
+*.dll
+*.so
+
+# Executables
+*.exe
+
+# Unit-test
+build
