@@ -3,21 +3,17 @@
 #   Date:       Author:                    Reason:                                                    #
 #   02.06.2023  Gaina Stefan               Initial version.                                           #
 #   02.06.2023  Gaina Stefan               Fixed copy_libraries rule.                                 #
+#   03.06.2023  Gaina Stefan               Updated to support parent Makefile updates.                #
 # Description: This Makefile is used to generate an example for API-Test loading a dummy library and  #
 # testing its API.                                                                                    #
 #######################################################################################################
 
-CC      = gcc
 CFLAGS  = -Wall -Werror
 LDFLAGS = -L../apitest/lib/ -lapitest \
 		  -L../dummy-lib/lib/ -ldummy
 
-SRC := src
-OBJ := obj
-BIN := bin
-
-INCLUDES = -I../apitest/inc/ \
-		   -I../dummy-lib/inc/
+INCLUDES = -I../apitest/include/ \
+		   -I../dummy-lib/include/
 
 SOURCES    := $(wildcard $(SRC)/*.c)
 OBJECTS    := $(patsubst $(SRC)/%.c, $(OBJ)/%.o, $(SOURCES))
@@ -25,7 +21,7 @@ EXECUTABLE := apitest-test.exe
 
 all: | create_dirs $(EXECUTABLE) copy_libraries
 
-### CREATE DIRS ###
+### CREATE DIRECTORIES ###
 create_dirs:
 ifdef OS
 	if not exist "$(OBJ)" mkdir $(OBJ)

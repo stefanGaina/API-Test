@@ -2,7 +2,8 @@
  * @file apitest.c                                                                                    *
  * @date:      @author:                   Reason for change:                                          *
  * 02.06.2023  Gaina Stefan               Initial version.                                            *
- * @details This files implements the interface defined in apitest.h.                                 *
+ * 03.06.2023  Gaina Stefan               Fixed argc = -1 after freeing command.                      *
+ * @details This file implements the interface defined in apitest.h.                                  *
  * @todo While inputing the commands it would be nice to be able to navigate using the key arrows     *
  * through the command history (like in terminal). It works on Windows.                               *
  * @bug apitest_string_to_integer does not check if the number is larger than LONG_MAX.               *
@@ -98,8 +99,9 @@ void apitest_free_command(apitest_Command_t* command)
 		return;
 	}
 
-	while (0L <= --command->argc)
+	while (0L < command->argc)
 	{
+		--command->argc;
 		free(command->argv[command->argc]);
 		command->argv[command->argc] = NULL;
 	}

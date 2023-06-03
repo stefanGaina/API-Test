@@ -2,17 +2,13 @@
 # Module history:                                                                                     #
 #   Date:       Author:                    Reason:                                                    #
 #   02.06.2023  Gaina Stefan               Initial version.                                           #
+#   03.06.2023  Gaina Stefan               Updated to support the creation of "apitest" directory.    #
 # Description: This Makefile is used to generate the API-Test library.                                #
 #######################################################################################################
 
-CC     = gcc
 CFLAGS = -Wall -Werror -Wpointer-arith -fPIC
 
-SRC := src
-OBJ := obj
-LIB := lib
-
-INCLUDES = -Iinc/
+INCLUDES = -Iinclude/
 
 SOURCES := $(wildcard $(SRC)/*.c)
 OBJECTS := $(patsubst $(SRC)/%.c, $(OBJ)/%.o, $(SOURCES))
@@ -29,7 +25,7 @@ endif
 
 all: | create_dirs $(LIBRARY)
 
-### CREATE DIRS ###
+### CREATE DIRECTORIES ###
 create_dirs:
 ifdef OS
 	if not exist "$(OBJ)" mkdir $(OBJ)

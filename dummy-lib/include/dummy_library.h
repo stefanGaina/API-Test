@@ -1,3 +1,12 @@
+/******************************************************************************************************
+ * @file dummy_library.h                                                                              *
+ * @date:      @author:                   Reason for change:                                          *
+ * 02.06.2023  Gaina Stefan               Initial version.                                            *
+ * @details This file defines the public interface of dummy-lib.                                      *
+ * @todo Extend interface to support testing of floating point numbers.                               *
+ * @bug No known bugs.                                                                                *
+ *****************************************************************************************************/
+
 #ifndef DUMMY_LIBRARY_H_
 #define DUMMY_LIBRARY_H_
 

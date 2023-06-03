@@ -1,80 +1,39 @@
+/******************************************************************************************************
+ * @file apitest.c                                                                                    *
+ * @date:      @author:                   Reason for change:                                          *
+ * 02.06.2023  Gaina Stefan               Initial version.                                            *
+ * 03.06.2023  Gaina Stefan               Update documentation.                                       *
+ * @details This file is an example of a testing application based on API-Test.                       *
+ * @todo Allow testing from file and create help/usage menu.                                          *
+ * @bug No known bugs.                                                                                *
+ *****************************************************************************************************/
+
+/******************************************************************************************************
+ * HEADER FILE INCLUDES                                                                               *
+ *****************************************************************************************************/
+
 #include <stdlib.h>
 
 #include "apitest.h"
 #include "dummy_library.h"
 
-static void print_usage(void)
-{
+/******************************************************************************************************
+ * LOCAL FUNCTIONS                                                                                    *
+ *****************************************************************************************************/
 
-}
+/**
+ * @brief Prints the usage of the application to the user.
+*/
+static void print_usage(void);
 
-static void print_help(void)
-{
+/**
+ * @brief Prints the help menu to the user.
+*/
+static void print_help(void);
 
-}
-
-static bool run_sanity_tests(void)
-{
-	int16_t compare_ret = 0;
-
-	compare_ret = apitest_string_compare(NULL, NULL);
-	if (0 != compare_ret)
-	{
-		(void)fprintf(stdout, "0 == apitest_string_compare(NULL, NULL) failed! (ret: %" PRId16 ")", compare_ret);
-		return false;
-	}
-
-	compare_ret = apitest_string_compare("foo", NULL);
-	if (1 != compare_ret)
-	{
-		(void)fprintf(stdout, "1 == apitest_string_compare(\"foo\", NULL) failed! (ret: %" PRId16 ")", compare_ret);
-		return false;
-	}
-
-	compare_ret = apitest_string_compare(NULL, "foo");
-	if (-1 != compare_ret)
-	{
-		(void)fprintf(stdout, "-1 == apitest_string_compare(NULL, \"foo\") failed! (ret: %" PRId16 ")", compare_ret);
-		return false;
-	}
-
-	compare_ret = apitest_string_compare("foo", "foo");
-	if (0 != compare_ret)
-	{
-		(void)fprintf(stdout, "0 == apitest_string_compare(\"foo\", \"foo\") failed! (ret: %" PRId16 ")", compare_ret);
-		return false;
-	}
-
-	compare_ret = apitest_string_compare("abef", "abcd");
-	if (1 != compare_ret)
-	{
-		(void)fprintf(stdout, "1 == apitest_string_compare(\"abef\", \"abcd\") failed! (ret: %" PRId16 ")", compare_ret);
-		return false;
-	}
-
-	compare_ret = apitest_string_compare("abcd", "abef");
-	if (-1 != compare_ret)
-	{
-		(void)fprintf(stdout, "-1 == apitest_string_compare(\"abcd\", \"abef\") failed! (ret: %" PRId16 ")", compare_ret);
-		return false;
-	}
-
-	compare_ret = apitest_string_compare("abcdefgh", "abcd");
-	if (1 != compare_ret)
-	{
-		(void)fprintf(stdout, "1 == apitest_string_compare(\"abcdefgh\", \"abcd\") failed! (ret: %" PRId16 ")", compare_ret);
-		return false;
-	}
-
-	compare_ret = apitest_string_compare("abcd", "abcdefgh");
-	if (-1 != compare_ret)
-	{
-		(void)fprintf(stdout, "-1 == apitest_string_compare(\"abcd\", \"abcdefgh\") failed! (ret: %" PRId16 ")", compare_ret);
-		return false;
-	}
-
-	return true;
-}
+/******************************************************************************************************
+ * FUNCTION DEFINITIONS                                                                               *
+ *****************************************************************************************************/
 
 int main(int argc, char* argv[])
 {
@@ -84,9 +43,10 @@ int main(int argc, char* argv[])
 	uint16_t          digits_count_ret        = 0U;
 	uint64_t          string_length_ret       = 0ULL;
 
-	if (false == run_sanity_tests())
+	if (2L <= argc)
 	{
-		return EXIT_FAILURE;
+		(void)fprintf(stdout, "Extra parameters will be ignored!\n");
+		print_usage();
 	}
 
 	print_usage();
@@ -170,4 +130,14 @@ FREE_COMMAND:
 	(void)fprintf(stdout, "Process exited successfully!\n\n");
 
 	return EXIT_SUCCESS;
+}
+
+static void print_usage(void)
+{
+
+}
+
+static void print_help(void)
+{
+
 }

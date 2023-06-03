@@ -2,6 +2,7 @@
 .vscode
 
 # Objects
+obj
 *.o
 
 # Libraries
@@ -14,4 +15,8 @@
 *.exe
 
 # Unit-test
-build
+coverage_report
+*.gcno
+*.gcda
+*.gcov
+*.info
