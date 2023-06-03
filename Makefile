@@ -18,7 +18,8 @@ export COVERAGE_REPORT := coverage_report
 GENHTML       = vendor/lcov/genhtml.perl
 GENHTML_FLAGS = --branch-coverage --num-spaces=4 --output-directory coverage_report/
 
-INFO_FILES = $(COVERAGE_REPORT)/apitest.info
+INFO_FILES = $(COVERAGE_REPORT)/apitest.info \
+			 $(COVERAGE_REPORT)/dummy_library.info
 
 ### MAKE SUBDIRECTORIES ###
 all:

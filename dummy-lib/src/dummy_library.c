@@ -2,6 +2,7 @@
  * @file dummy_library.c                                                                              *
  * @date:      @author:                   Reason for change:                                          *
  * 02.06.2023  Gaina Stefan               Initial version.                                            *
+ * 03.06.2023  Gaina Stefan               Fixed digit count of 0 = 0.                                 *
  * @details This file implements the interface defined in dummy_library.h.                            *
  * @todo N/A.                                                                                         *
  * @bug No known bugs.                                                                                *
@@ -19,9 +20,14 @@
 
 uint16_t dummy_digits_count(int64_t number)
 {
-	uint16_t digits_count = 0U;
+	uint16_t digits_count = 1U;
 
-	while (0LL != number)
+	if (0LL > number)
+	{
+		number *= -1L;
+	}
+
+	while (9LL <= number)
 	{
 		number /= 10;
 		++digits_count;
