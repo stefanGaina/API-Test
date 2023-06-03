@@ -3,6 +3,7 @@
  * @date:      @author:                   Reason for change:                                          *
  * 03.06.2023  Gaina Stefan               Initial version.                                            *
  * 03.06.2023  Gaina Stefan               Added messages when expectations fail.                      *
+ * 03.06.2023  Gaina Stefan               Created tests for apitest_string_to_float.                  *
  * @details This file unit-tests apitest_test.c                                                       *
  * @todo N/A.                                                                                         *
  * @bug apitest_get_command can not be tested with input from terminal.                               *
@@ -254,14 +255,14 @@ TEST_F(ApiTest, apitest_string_to_integer_decimal_positive_success)
 
 TEST_F(ApiTest, apitest_string_to_integer_decimal_positive_invalidString_errorNULL_fail)
 {
-	EXPECT_EQ(12LL, apitest_string_to_integer("12INVALID_STRING", NULL)) << "Incorrect integer returned!";
+	EXPECT_EQ(0LL, apitest_string_to_integer("12INVALID_STRING", NULL)) << "Incorrect integer returned!";
 }
 
 TEST_F(ApiTest, apitest_string_to_integer_decimal_positive_invalidString_fail)
 {
 	bool error = false;
 
-	EXPECT_EQ(12LL, apitest_string_to_integer("12INVALID_STRING", &error)) << "Incorrect integer returned!";
+	EXPECT_EQ(0LL, apitest_string_to_integer("12INVALID_STRING", &error)) << "Incorrect integer returned!";
 	EXPECT_EQ(true, error) << "error was not set!";
 }
 
@@ -293,14 +294,14 @@ TEST_F(ApiTest, apitest_string_to_integer_decimal_negative_success)
 
 TEST_F(ApiTest, apitest_string_to_integer_decimal_negative_invalidString_errorNULL_fail)
 {
-	EXPECT_EQ(10LL, apitest_string_to_integer("-10 INVALID_STRING", NULL)) << "Incorrect integer returned!";
+	EXPECT_EQ(0LL, apitest_string_to_integer("-10 INVALID_STRING", NULL)) << "Incorrect integer returned!";
 }
 
 TEST_F(ApiTest, apitest_string_to_integer_decimal_negative_invalidString_fail)
 {
 	bool error = false;
 
-	EXPECT_EQ(10LL, apitest_string_to_integer("-10 INVALID_STRING", &error)) << "Incorrect integer returned!";
+	EXPECT_EQ(0LL, apitest_string_to_integer("-10 INVALID_STRING", &error)) << "Incorrect integer returned!";
 	EXPECT_EQ(true, error) << "error was not set!";
 }
 
@@ -346,27 +347,27 @@ TEST_F(ApiTest, apitest_string_to_integer_binary_positive_leadingZeros_success)
 
 TEST_F(ApiTest, apitest_string_to_integer_binary_positive_errorNULL_fail)
 {
-	EXPECT_EQ(3LL, apitest_string_to_integer("0b11INVALID_STRING", NULL)) << "Incorrect integer returned!";
+	EXPECT_EQ(0LL, apitest_string_to_integer("0b11INVALID_STRING", NULL)) << "Incorrect integer returned!";
 }
 
 TEST_F(ApiTest, apitest_string_to_integer_binary_positive_fail)
 {
 	bool error = false;
 
-	EXPECT_EQ(3LL, apitest_string_to_integer("0b11INVALID_STRING", &error)) << "Incorrect integer returned!";
+	EXPECT_EQ(0LL, apitest_string_to_integer("0b11INVALID_STRING", &error)) << "Incorrect integer returned!";
 	EXPECT_EQ(true, error) << "error was not set!";
 }
 
 TEST_F(ApiTest, apitest_string_to_integer_binary_positive_invalidString_leadingZeros_errorNULL_fail)
 {
-	EXPECT_EQ(3LL, apitest_string_to_integer("0b00011INVALID_STRING", NULL)) << "Incorrect integer returned!";
+	EXPECT_EQ(0LL, apitest_string_to_integer("0b00011INVALID_STRING", NULL)) << "Incorrect integer returned!";
 }
 
 TEST_F(ApiTest, apitest_string_to_integer_binary_positive_invalidString_leadingZeros_fail)
 {
 	bool error = false;
 
-	EXPECT_EQ(3LL, apitest_string_to_integer("0b00011INVALID_STRING", &error)) << "Incorrect integer returned!";
+	EXPECT_EQ(0LL, apitest_string_to_integer("0b00011INVALID_STRING", &error)) << "Incorrect integer returned!";
 	EXPECT_EQ(true, error) << "error was not set!";
 }
 
@@ -411,27 +412,27 @@ TEST_F(ApiTest, apitest_string_to_integer_binary_negative_leadingZeros_success)
 
 TEST_F(ApiTest, apitest_string_to_integer_binary_negative_errorNULL_fail)
 {
-	EXPECT_EQ(2LL, apitest_string_to_integer("-0b10 INVALID_STRING", NULL)) << "Incorrect integer returned!";
+	EXPECT_EQ(0LL, apitest_string_to_integer("-0b10 INVALID_STRING", NULL)) << "Incorrect integer returned!";
 }
 
 TEST_F(ApiTest, apitest_string_to_integer_binary_negative_fail)
 {
 	bool error = false;
 
-	EXPECT_EQ(2LL, apitest_string_to_integer("-0b10 INVALID_STRING", &error)) << "Incorrect integer returned!";
+	EXPECT_EQ(0LL, apitest_string_to_integer("-0b10 INVALID_STRING", &error)) << "Incorrect integer returned!";
 	EXPECT_EQ(true, error) << "error was not set!";
 }
 
 TEST_F(ApiTest, apitest_string_to_integer_binary_negative_leadingZeros_errorNULL_fail)
 {
-	EXPECT_EQ(2LL, apitest_string_to_integer("-0b00010 INVALID_STRING", NULL)) << "Incorrect integer returned!";
+	EXPECT_EQ(0LL, apitest_string_to_integer("-0b00010 INVALID_STRING", NULL)) << "Incorrect integer returned!";
 }
 
 TEST_F(ApiTest, apitest_string_to_integer_binary_negative_leadingZeros_fail)
 {
 	bool error = false;
 
-	EXPECT_EQ(2LL, apitest_string_to_integer("-0b00010 INVALID_STRING", &error)) << "Incorrect integer returned!";
+	EXPECT_EQ(0LL, apitest_string_to_integer("-0b00010 INVALID_STRING", &error)) << "Incorrect integer returned!";
 	EXPECT_EQ(true, error) << "error was not set!";
 }
 
@@ -477,27 +478,27 @@ TEST_F(ApiTest, apitest_string_to_integer_octal_positive_leadingZeros_success)
 
 TEST_F(ApiTest, apitest_string_to_integer_octal_positive_invalidString_errorNULL_fail)
 {
-	EXPECT_EQ(15LL, apitest_string_to_integer("017INVALID_STRING", NULL)) << "Incorrect integer returned!";
+	EXPECT_EQ(0LL, apitest_string_to_integer("017INVALID_STRING", NULL)) << "Incorrect integer returned!";
 }
 
 TEST_F(ApiTest, apitest_string_to_integer_octal_positive_invalidString_fail)
 {
 	bool error = false;
 
-	EXPECT_EQ(15LL, apitest_string_to_integer("017INVALID_STRING", &error)) << "Incorrect integer returned!";
+	EXPECT_EQ(0LL, apitest_string_to_integer("017INVALID_STRING", &error)) << "Incorrect integer returned!";
 	EXPECT_EQ(true, error) << "error was not set!";
 }
 
 TEST_F(ApiTest, apitest_string_to_integer_octal_positive_invalidString_leadingZeros_errorNULL_fail)
 {
-	EXPECT_EQ(15LL, apitest_string_to_integer("000017INVALID_STRING", NULL)) << "Incorrect integer returned!";
+	EXPECT_EQ(0LL, apitest_string_to_integer("000017INVALID_STRING", NULL)) << "Incorrect integer returned!";
 }
 
 TEST_F(ApiTest, apitest_string_to_integer_octal_positive_invalidString_leadingZeros_fail)
 {
 	bool error = false;
 
-	EXPECT_EQ(15LL, apitest_string_to_integer("000017INVALID_STRING", &error)) << "Incorrect integer returned!";
+	EXPECT_EQ(0LL, apitest_string_to_integer("000017INVALID_STRING", &error)) << "Incorrect integer returned!";
 	EXPECT_EQ(true, error) << "error was not set!";
 }
 
@@ -542,27 +543,27 @@ TEST_F(ApiTest, apitest_string_to_integer_octal_negative_leadingZeros_success)
 
 TEST_F(ApiTest, apitest_string_to_integer_octal_negative_invalidString_errorNULL_fail)
 {
-	EXPECT_EQ(16LL, apitest_string_to_integer("-020 INVALID_STRING", NULL)) << "Incorrect integer returned!";
+	EXPECT_EQ(0LL, apitest_string_to_integer("-020 INVALID_STRING", NULL)) << "Incorrect integer returned!";
 }
 
 TEST_F(ApiTest, apitest_string_to_integer_octal_negative_invalidString_fail)
 {
 	bool error = false;
 
-	EXPECT_EQ(16LL, apitest_string_to_integer("-020 INVALID_STRING", &error)) << "Incorrect integer returned!";
+	EXPECT_EQ(0LL, apitest_string_to_integer("-020 INVALID_STRING", &error)) << "Incorrect integer returned!";
 	EXPECT_EQ(true, error) << "error was not set!";
 }
 
 TEST_F(ApiTest, apitest_string_to_integer_octal_negative_invalidString_leadingZeros_errorNULL_fail)
 {
-	EXPECT_EQ(16LL, apitest_string_to_integer("-000020 INVALID_STRING", NULL)) << "Incorrect integer returned!";
+	EXPECT_EQ(0LL, apitest_string_to_integer("-000020 INVALID_STRING", NULL)) << "Incorrect integer returned!";
 }
 
 TEST_F(ApiTest, apitest_string_to_integer_octal_negative_invalidString_leadingZeros_fail)
 {
 	bool error = false;
 
-	EXPECT_EQ(16LL, apitest_string_to_integer("-000020 INVALID_STRING", &error)) << "Incorrect integer returned!";
+	EXPECT_EQ(0LL, apitest_string_to_integer("-000020 INVALID_STRING", &error)) << "Incorrect integer returned!";
 	EXPECT_EQ(true, error) << "error was not set!";
 }
 
@@ -608,27 +609,27 @@ TEST_F(ApiTest, apitest_string_to_integer_hexadecimal_positive_leadingZeros_succ
 
 TEST_F(ApiTest, apitest_string_to_integer_hexadecimal_positive_invalidString_errorNULL_fail)
 {
-	EXPECT_EQ(122LL, apitest_string_to_integer("0x7AINVALID_STRING", NULL)) << "Incorrect integer returned!";
+	EXPECT_EQ(0LL, apitest_string_to_integer("0x7AINVALID_STRING", NULL)) << "Incorrect integer returned!";
 }
 
 TEST_F(ApiTest, apitest_string_to_integer_hexadecimal_positive_invalidString_fail)
 {
 	bool error = false;
 
-	EXPECT_EQ(122LL, apitest_string_to_integer("0x7AINVALID_STRING", &error)) << "Incorrect integer returned!";
+	EXPECT_EQ(0LL, apitest_string_to_integer("0x7AINVALID_STRING", &error)) << "Incorrect integer returned!";
 	EXPECT_EQ(true, error) << "error was not set!";
 }
 
 TEST_F(ApiTest, apitest_string_to_integer_hexadecimal_positive_invalidString_leadingZeros_errorNULL_fail)
 {
-	EXPECT_EQ(122LL, apitest_string_to_integer("0x0007AINVALID_STRING", NULL)) << "Incorrect integer returned!";
+	EXPECT_EQ(0LL, apitest_string_to_integer("0x0007AINVALID_STRING", NULL)) << "Incorrect integer returned!";
 }
 
 TEST_F(ApiTest, apitest_string_to_integer_hexadecimal_positive_invalidString_leadingZeros_fail)
 {
 	bool error = false;
 
-	EXPECT_EQ(122LL, apitest_string_to_integer("0x0007AINVALID_STRING", &error)) << "Incorrect integer returned!";
+	EXPECT_EQ(0LL, apitest_string_to_integer("0x0007AINVALID_STRING", &error)) << "Incorrect integer returned!";
 	EXPECT_EQ(true, error) << "error was not set!";
 }
 
@@ -673,26 +674,173 @@ TEST_F(ApiTest, apitest_string_to_integer_hexadecimal_negative_leadingZeros_succ
 
 TEST_F(ApiTest, apitest_string_to_integer_hexadecimal_negative_invalidString_errorNULL_fail)
 {
-	EXPECT_EQ(64LL, apitest_string_to_integer("-0x40 INVALID_STRING", NULL)) << "Incorrect integer returned!";
+	EXPECT_EQ(0LL, apitest_string_to_integer("-0x40 INVALID_STRING", NULL)) << "Incorrect integer returned!";
 }
 
 TEST_F(ApiTest, apitest_string_to_integer_hexadecimal_negative_invalidString_fail)
 {
 	bool error = false;
 
-	EXPECT_EQ(64LL, apitest_string_to_integer("-0x40 INVALID_STRING", &error)) << "Incorrect integer returned!";
+	EXPECT_EQ(0LL, apitest_string_to_integer("-0x40 INVALID_STRING", &error)) << "Incorrect integer returned!";
 	EXPECT_EQ(true, error) << "error was not set!";
 }
 
 TEST_F(ApiTest, apitest_string_to_integer_hexadecimal_negative_invalidString_leadingZeros_errorNULL_fail)
 {
-	EXPECT_EQ(64LL, apitest_string_to_integer("-0x00040 INVALID_STRING", NULL)) << "Incorrect integer returned!";
+	EXPECT_EQ(0LL, apitest_string_to_integer("-0x00040 INVALID_STRING", NULL)) << "Incorrect integer returned!";
 }
 
 TEST_F(ApiTest, apitest_string_to_integer_hexadecimal_negative_invalidString_leadingZeros_fail)
 {
 	bool error = false;
 
-	EXPECT_EQ(64LL, apitest_string_to_integer("-0x00040 INVALID_STRING", &error)) << "Incorrect integer returned!";
+	EXPECT_EQ(0LL, apitest_string_to_integer("-0x00040 INVALID_STRING", &error)) << "Incorrect integer returned!";
+	EXPECT_EQ(true, error) << "error was not set!";
+}
+
+/******************************************************************************************************
+ * apitest_string_to_float                                                                            *
+ *****************************************************************************************************/
+
+TEST_F(ApiTest, apitest_string_to_float_NULL_errorNULL_fail)
+{
+	EXPECT_EQ(0.0, apitest_string_to_float(NULL, NULL)) << "Incorrect float returned!";
+}
+
+TEST_F(ApiTest, apitest_string_to_float_NULL_fail)
+{
+	bool error = false;
+
+	EXPECT_EQ(0.0, apitest_string_to_float(NULL, &error)) << "Incorrect float returned!";
+	EXPECT_EQ(true, error) << "error was not set!";
+}
+
+TEST_F(ApiTest, apitest_string_to_float_emptyString_errorNULL_fail)
+{
+	EXPECT_EQ(0.0, apitest_string_to_float("", NULL)) << "Incorrect float returned!";
+}
+
+TEST_F(ApiTest, apitest_string_to_float_emptyString_fail)
+{
+	bool error = false;
+
+	EXPECT_EQ(0.0, apitest_string_to_float("", &error)) << "Incorrect float returned!";
+	EXPECT_EQ(true, error) << "error was not set!";
+}
+
+TEST_F(ApiTest, apitest_string_to_float_invalidString_errorNULL_fail)
+{
+	EXPECT_EQ(0.0, apitest_string_to_float("INVALID_STRING", NULL)) << "Incorrect float returned!";
+}
+
+TEST_F(ApiTest, apitest_string_to_float_invalidString_fail)
+{
+	bool error = false;
+
+	EXPECT_EQ(0.0, apitest_string_to_float("INVALID_STRING", &error)) << "Incorrect float returned!";
+	EXPECT_EQ(true, error) << "error was not set!";
+}
+
+TEST_F(ApiTest, apitest_string_to_float_positive_zero_errorNULL_success)
+{
+	EXPECT_EQ(0.0, apitest_string_to_float("0.0", NULL)) << "Incorrect float returned!";
+}
+
+TEST_F(ApiTest, apitest_string_to_float_positive_zero_success)
+{
+	bool error = true;
+
+	EXPECT_EQ(0.0, apitest_string_to_float("0.0", &error)) << "Incorrect float returned!";
+	EXPECT_EQ(false, error) << "error was not set!";
+}
+
+TEST_F(ApiTest, apitest_string_to_float_positive_integer_errorNULL_success)
+{
+	EXPECT_EQ(1234567.0, apitest_string_to_float("1234567", NULL)) << "Incorrect float returned!";
+}
+
+TEST_F(ApiTest, apitest_string_to_float_positive_integer_success)
+{
+	bool error = true;
+
+	EXPECT_EQ(1234567.0, apitest_string_to_float("1234567", &error)) << "Incorrect float returned!";
+	EXPECT_EQ(false, error) << "error was not set!";
+}
+
+TEST_F(ApiTest, apitest_string_to_float_positive_errorNULL_success)
+{
+	EXPECT_EQ(199890.222301, apitest_string_to_float("199890.222301", NULL)) << "Incorrect float returned!";
+}
+
+TEST_F(ApiTest, apitest_string_to_float_positive_success)
+{
+	bool error = true;
+
+	EXPECT_EQ(199890.222301, apitest_string_to_float("199890.222301", &error)) << "Incorrect float returned!";
+	EXPECT_EQ(false, error) << "error was not set!";
+}
+
+TEST_F(ApiTest, apitest_string_to_float_positive_errorNULL_fail)
+{
+	EXPECT_EQ(0.0, apitest_string_to_float("199890.222301INVALID_STRING", NULL)) << "Incorrect float returned!";
+}
+
+TEST_F(ApiTest, apitest_string_to_float_positive_fail)
+{
+	bool error = false;
+
+	EXPECT_EQ(0.0, apitest_string_to_float("199890INVALID_STRING", &error)) << "Incorrect float returned!";
+	EXPECT_EQ(true, error) << "error was not set!";
+}
+
+TEST_F(ApiTest, apitest_string_to_float_negative_zero_errorNULL_success)
+{
+	EXPECT_EQ(0.0, apitest_string_to_float("-0.0", NULL)) << "Incorrect float returned!";
+}
+
+TEST_F(ApiTest, apitest_string_to_float_negative_zero_success)
+{
+	bool error = true;
+
+	EXPECT_EQ(0.0, apitest_string_to_float("-0.0", &error)) << "Incorrect float returned!";
+	EXPECT_EQ(false, error) << "error was not set!";
+}
+
+TEST_F(ApiTest, apitest_string_to_float_negative_integer_errorNULL_success)
+{
+	EXPECT_EQ(-1234567.0, apitest_string_to_float("-1234567", NULL)) << "Incorrect float returned!";
+}
+
+TEST_F(ApiTest, apitest_string_to_float_negative_integer_success)
+{
+	bool error = true;
+
+	EXPECT_EQ(-1234567.0, apitest_string_to_float("-1234567", &error)) << "Incorrect float returned!";
+	EXPECT_EQ(false, error) << "error was not set!";
+}
+
+TEST_F(ApiTest, apitest_string_to_float_negative_errorNULL_success)
+{
+	EXPECT_EQ(-199890.222301, apitest_string_to_float("-199890.222301", NULL)) << "Incorrect float returned!";
+}
+
+TEST_F(ApiTest, apitest_string_to_float_negative_success)
+{
+	bool error = true;
+
+	EXPECT_EQ(-199890.222301, apitest_string_to_float("-199890.222301", &error)) << "Incorrect float returned!";
+	EXPECT_EQ(false, error) << "error was not set!";
+}
+
+TEST_F(ApiTest, apitest_string_to_float_negative_errorNULL_fail)
+{
+	EXPECT_EQ(0.0, apitest_string_to_float("-199890 INVALID_STRING", NULL)) << "Incorrect float returned!";
+}
+
+TEST_F(ApiTest, apitest_string_to_float_negative_fail)
+{
+	bool error = false;
+
+	EXPECT_EQ(0.0, apitest_string_to_float("-199890.222301 INVALID_STRING", &error)) << "Incorrect float returned!";
 	EXPECT_EQ(true, error) << "error was not set!";
 }

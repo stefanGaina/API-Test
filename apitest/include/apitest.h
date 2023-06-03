@@ -3,8 +3,9 @@
  * @date:      @author:                   Reason for change:                                          *
  * 02.06.2023  Gaina Stefan               Initial version.                                            *
  * 03.06.2023  Gaina Stefan               Updated documentation.                                      *
+ * 03.06.2023  Gaina Stefan               Added apitest_string_to_float.                              *
  * @details This file defines the type definitions and public interface of API-Test.                  *
- * @todo Offer a way to get a floating point number from a string.                                    *
+ * @todo N/A.                                                                                         *
  * @bug No known bugs.                                                                                *
  *****************************************************************************************************/
 
@@ -87,9 +88,18 @@ extern int16_t apitest_string_compare(const char* string1, const char* string2);
  * @param[in] string: The number in string format (NULL or invalid characters will result in error).
  * @param[out] error: Will be set to false if operation was successfull, true otherwise (can be
  * NULL).
- * @return The resulted number (0 in case of error or an incomplete number).
+ * @return The resulted number or 0 in case of error.
 */
 extern int64_t apitest_string_to_integer(const char* string, bool* error);
+
+/**
+ * @brief Converts a decimal number (can be negative) with point from a string.
+ * @param[in] string: The number in string format (NULL or invalid characters will result in error).
+ * @param[out] error: Will be set to false if operation was successfull, true otherwise (can be
+ * NULL).
+ * @return The resulted number or 0.0 in case of error.
+*/
+extern double apitest_string_to_float(const char* string, bool* error);
 
 #ifdef __cplusplus
 }

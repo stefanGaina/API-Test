@@ -2,6 +2,7 @@
  * @file dummy_library_test.cpp                                                                       *
  * @date:      @author:                   Reason for change:                                          *
  * 03.06.2023  Gaina Stefan               Initial version.                                            *
+ * 03.06.2023  Gaina Stefan               Created tests for dummy_floor_round.                        *
  * @details This file unit-tests dummy_library.c                                                      *
  * @todo N/A.                                                                                         *
  * @bug No known bugs.                                                                                *
@@ -76,4 +77,13 @@ TEST_F(DummyLibTest, dummy_string_length_success)
 	const char* parameter = "123 56789";
 
 	EXPECT_EQ(strlen(parameter), dummy_string_length(parameter)) << "Wrong length returned!";
+}
+
+/******************************************************************************************************
+ * dummy_floor_round                                                                                *
+ *****************************************************************************************************/
+
+TEST_F(DummyLibTest, dummy_floor_round_success)
+{
+	EXPECT_EQ(123.0, dummy_floor_round(123.123)) << "Wrong number returned!";
 }

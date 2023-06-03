@@ -3,6 +3,7 @@
  * @date:      @author:                   Reason for change:                                          *
  * 02.06.2023  Gaina Stefan               Initial version.                                            *
  * 03.06.2023  Gaina Stefan               Update documentation.                                       *
+ * 03.06.2023  Gaina Stefan               Added option for dummy_floor_round.                         *
  * @details This file is an example of a testing application based on API-Test.                       *
  * @todo Allow testing from file and create help/usage menu.                                          *
  * @bug No known bugs.                                                                                *
@@ -38,10 +39,11 @@ static void print_help(void);
 int main(int argc, char* argv[])
 {
 	apitest_Command_t command                 = { 0 };
-	bool              string_to_integer_error = false;
+	bool              error                   = false;
 	int64_t           digits_count_parameter  = 0LL;
 	uint16_t          digits_count_ret        = 0U;
 	uint64_t          string_length_ret       = 0ULL;
+	double            floor_round             = 0.0;
 
 	if (2L <= argc)
 	{
@@ -55,9 +57,22 @@ int main(int argc, char* argv[])
 	{
 		command = apitest_get_command("apitest-test> ", NULL);
 
+		/* Sanity checks for debugging purposes. */
 		if (0L >= command.argc)
 		{
 			(void)fprintf(stdout, "Invalid command received! (argc: %" PRId32 ")\n", command.argc);
+			continue;
+		}
+
+		if (NULL == command.argv)
+		{
+			(void)fprintf(stdout, "Invalid command received! (argv is NULL)\n");
+			continue;
+		}
+
+		if (NULL == command.argv[0])
+		{
+			(void)fprintf(stdout, "Invalid command received! (argv[0] is NULL)\n");
 			continue;
 		}
 
@@ -88,8 +103,8 @@ int main(int argc, char* argv[])
 				(void)fprintf(stdout, "Extra parameters will be ignored!\n");
 			}
 
-			digits_count_parameter = apitest_string_to_integer(command.argv[1], &string_to_integer_error);
-			if (true == string_to_integer_error)
+			digits_count_parameter = apitest_string_to_integer(command.argv[1], &error);
+			if (true == error)
 			{
 				(void)fprintf(stdout, "The parameter format is wrong!\n");
 				goto FREE_COMMAND;
@@ -118,6 +133,30 @@ int main(int argc, char* argv[])
 			(void)fprintf(stdout, "dummy_string_length = %" PRIu64 "\n\n", string_length_ret);
 
 			goto FREE_COMMAND;
+		}
+
+		if (0 == apitest_string_compare("dummy_floor_round", command.argv[0]))
+		{
+			if (1L == command.argc)
+			{
+				(void)fprintf(stdout, "Not enough parameters!\n");
+				goto FREE_COMMAND;
+			}
+
+			if (2L < command.argc)
+			{
+				(void)fprintf(stdout, "Extra parameters will be ignored!\n");
+			}
+
+			floor_round = apitest_string_to_float(command.argv[1], &error);
+			if (true == error)
+			{
+				(void)fprintf(stdout, "The parameter format is wrong!\n");
+				goto FREE_COMMAND;
+			}
+
+			floor_round = dummy_floor_round(floor_round);
+			(void)fprintf(stdout, "dummy_floor_round = %lf\n\n", floor_round);
 		}
 
 		(void)fprintf(stdout, "Command is not valid! (press h for help)\n\n");

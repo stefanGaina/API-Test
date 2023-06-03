@@ -3,10 +3,11 @@
  * @date:      @author:                   Reason for change:                                          *
  * 02.06.2023  Gaina Stefan               Initial version.                                            *
  * 03.06.2023  Gaina Stefan               Fixed argc = -1 after freeing command.                      *
+ * 03.06.2023  Gaina Stefan               Added implementation for apitest_string_to_float.           *
  * @details This file implements the interface defined in apitest.h.                                  *
  * @todo While inputing the commands it would be nice to be able to navigate using the key arrows     *
  * through the command history (like in terminal). It works on Windows.                               *
- * @bug apitest_string_to_integer does not check if the number is larger than LONG_MAX.               *
+ * @bug apitest_string_to_integer/float does not check if the number is larger than LONG_MAX.         *
  * When inputing strings as parameters to the functions it is impossible to have spaces (can be fixed *
  * by adding "" logic when parsing the command).                                                      *
  *****************************************************************************************************/
@@ -162,7 +163,7 @@ int64_t apitest_string_to_integer(const char* string, bool* error)
 
 	if (NULL == string || '\0' == *string)
 	{
-		return result_integer;
+		return 0LL;
 	}
 
 	if ('-' == *string)
@@ -180,7 +181,7 @@ int64_t apitest_string_to_integer(const char* string, bool* error)
 		{
 			if ('0' > *string || '1' < *string)
 			{
-				return result_integer;
+				return 0LL;
 			}
 			result_integer = result_integer * 2LL + (*string - '0');
 		}
@@ -206,7 +207,7 @@ int64_t apitest_string_to_integer(const char* string, bool* error)
 			}
 			else
 			{
-				return result_integer;
+				return 0LL;
 			}
 		}
 		while ('\0' != *++string);
@@ -223,7 +224,7 @@ int64_t apitest_string_to_integer(const char* string, bool* error)
 		{
 			if ('0' > *string || '7' < *string)
 			{
-				return result_integer;
+				return 0LL;
 			}
 			result_integer = result_integer * 8LL + (*string - '0');
 		}
@@ -237,7 +238,7 @@ int64_t apitest_string_to_integer(const char* string, bool* error)
 	{
 		if ('0' > *string || '9' < *string)
 		{
-			return result_integer;
+			return 0LL;
 		}
 		result_integer = result_integer * 10LL + (*string - '0');
 	}
@@ -256,4 +257,73 @@ CHECK_SIGN:
 	}
 
 	return result_integer;
+}
+
+double apitest_string_to_float(const char* string, bool* error)
+{
+	double result_float  = 0.0;
+	double fraction_part = 0.0;
+	bool   is_negative   = false;
+
+	if (NULL != error)
+	{
+		*error = true;
+	}
+
+	if (NULL == string || '\0' == *string)
+	{
+		return 0.0;
+	}
+
+	if ('-' == *string)
+	{
+		is_negative = true;
+		++string;
+	}
+
+	/* whole part */
+	do
+	{
+		if ('0' > *string || '9' < *string)
+		{
+			return 0.0;
+		}
+		result_float = result_float * 10.0 + (*string - '0');
+
+		if ('\0' == *++string)
+		{
+			goto CHECK_SIGN;
+		}
+	}
+	while ('.' != *string);
+
+	/* fraction part */
+	while ('\0' != *++string)
+	{
+		if ('0' > *string || '9' < *string)
+		{
+			return 0.0;
+		}
+		fraction_part = fraction_part * 10.0 + (*string - '0');
+	}
+
+	while (1.0 <= fraction_part)
+	{
+		fraction_part /= 10.0;
+	}
+	result_float += fraction_part;
+
+CHECK_SIGN:
+
+	if (true == is_negative)
+	{
+		result_float *= -1.0;
+	}
+
+	if (NULL != error)
+	{
+		*error = false;
+	}
+
+	return result_float;
 }
