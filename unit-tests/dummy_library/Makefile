@@ -2,6 +2,7 @@
 # Module history:                                                                                     #
 #   Date:       Author:                    Reason:                                                    #
 #   03.06.2023  Gaina Stefan               Initial version.                                           #
+#   05.06.2023  Gaina Stefan               Fixed rules for linux.                                     #
 # Description: This Makefile is used to compile unit-test for dummy_library.c, run them and generate  #
 # coverage report.                                                                                    #
 #######################################################################################################
@@ -18,14 +19,11 @@ all: | create_dir $(EXECUTABLE)
 
 ### CREATE DIRECTORY ###
 create_dir:
-ifdef OS
+ifeq (Windows_NT, $(OS))
 	if not exist "$(OBJ)" mkdir $(OBJ)
-else
-	ifeq ($(shell uname), Linux)
-		mkdir -p $(OBJ)
-	else
-		$(error Platform is not supported!)
-	endif
+endif
+ifeq (Linux, $(shell uname))
+	mkdir -p $(OBJ)
 endif
 
 ### BINARIES ###
@@ -43,45 +41,37 @@ execute_tests:
 
 ### COPY RESULTS ###
 copy_results:
-ifdef OS
+ifeq (Windows_NT, $(OS))
 	copy $(OBJ)\$(TESTED_FILE_NAME).gcda ..\..\dummy-lib\src
 	copy $(OBJ)\$(TESTED_FILE_NAME).gcno ..\..\dummy-lib\src
-else
-	ifeq ($(shell uname), Linux)
-		cp $(OBJ)\$(TESTED_FILE_NAME).gcda ../../dummy-lib/src/
-		cp $(OBJ)\$(TESTED_FILE_NAME).gcno ../../dummy-lib/src/
-	else
-		$(error Platform is not supported!)
-	endif
+endif
+ifeq (Linux, $(shell uname))
+	cp $(OBJ)\$(TESTED_FILE_NAME).gcda ../../dummy-lib/src/
+	cp $(OBJ)\$(TESTED_FILE_NAME).gcno ../../dummy-lib/src/
 endif
 	cd $(TESTED_FILE_DIR) && gcov -b $(TESTED_FILE_NAME).c
 	cd $(TESTED_FILE_DIR) && perl $(LCOV) --capture $(LCOV_BRANCH_FLAG) --directory . --output-file $(TESTED_FILE_NAME)_all.info
 	cd $(TESTED_FILE_DIR) && perl $(LCOV) --extract $(TESTED_FILE_NAME)_all.info "*.c" $(LCOV_BRANCH_FLAG) --output-file $(TESTED_FILE_NAME).info
-ifdef OS
+ifeq (Windows_NT, $(OS))
 	copy ..\..\dummy-lib\src\$(TESTED_FILE_NAME).info ..\..\coverage_report\$(TESTED_FILE_NAME).info
-else
-	ifeq ($(shell uname), Linux)
-		cp ../../dummy-lib/src/$(TESTED_FILE_NAME).info ../../coverage_report/$(TESTED_FILE_NAME).info
-	else
-		$(error Platform is not supported!)
-	endif
+endif
+ifeq (Linux, $(shell uname))
+	cp ../../dummy-lib/src/$(TESTED_FILE_NAME).info ../../coverage_report/$(TESTED_FILE_NAME).info
 endif
 
 ### CLEAN ###
 clean:
-ifdef OS
-	rd /s /q $(OBJ)
-	del ..\..\dummy-lib\src\*.info
-	del ..\..\dummy-lib\src\*.gcov
-	del ..\..\dummy-lib\src\*.gcda
-	del ..\..\dummy-lib\src\*.gcno
-else
-	ifeq ($(shell uname), Linux)
-		rm -rf $(TESTED_FILE_DIR)*.info
-		rm -rf $(TESTED_FILE_DIR)*.gcov
-		rm -rf $(TESTED_FILE_DIR)*.gcda
-		rm -rf $(TESTED_FILE_DIR)*.gcno
-	else
-		$(error Platform is not supported!)
-	endif
+ifeq (Windows_NT, $(OS))
+	$(RM) $(OBJ)\*
+	$(RM) ..\..\dummy-lib\src\*.info
+	$(RM) ..\..\dummy-lib\src\*.gcov
+	$(RM) ..\..\dummy-lib\src\*.gcda
+	$(RM) ..\..\dummy-lib\src\*.gcno
+endif
+ifeq (Linux, $(shell uname))
+	$(RM) $(OBJ)/*
+	$(RM) $(TESTED_FILE_DIR)*.info
+	$(RM) $(TESTED_FILE_DIR)*.gcov
+	$(RM) $(TESTED_FILE_DIR)*.gcda
+	$(RM) $(TESTED_FILE_DIR)*.gcno
 endif

@@ -4,6 +4,7 @@
  * 02.06.2023  Gaina Stefan               Initial version.                                            *
  * 03.06.2023  Gaina Stefan               Fixed digit count of 0 = 0.                                 *
  * 03.06.2023  Gaina Stefan               Added implementation for dummy_floor_round.                 *
+ * 05.06.2023  Gaina Stefan               Fixed compilatioon error without stdder.h on linux.         *
  * @details This file implements the interface defined in dummy_library.h.                            *
  * @todo N/A.                                                                                         *
  * @bug No known bugs.                                                                                *
@@ -12,6 +13,8 @@
 /******************************************************************************************************
  * HEADER FILE INCLUDES                                                                               *
  *****************************************************************************************************/
+
+#include <stddef.h>
 
 #include "dummy_library.h"
 
