@@ -6,13 +6,11 @@ obj
 *.o
 
 # Libraries
-*.lib
-*.a
-*.dll
-*.so
+apitest/lib/*
+dummy-lib/lib/*
 
 # Executables
-*.exe
+test/bin/*
 
 # Unit-test
 coverage_report
