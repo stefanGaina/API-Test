@@ -4,8 +4,9 @@
  * 02.06.2023  Gaina Stefan               Initial version.                                            *
  * 03.06.2023  Gaina Stefan               Update documentation.                                       *
  * 03.06.2023  Gaina Stefan               Added option for dummy_floor_round.                         *
+ * 05.06.2023  Gaina Stefan               Added testing from file option.                             *
  * @details This file is an example of a testing application based on API-Test.                       *
- * @todo Allow testing from file and create help/usage menu.                                          *
+ * @todo N/A.                                                                                         *
  * @bug No known bugs.                                                                                *
  *****************************************************************************************************/
 
@@ -24,11 +25,15 @@
 
 /**
  * @brief Prints the usage of the application to the user.
+ * @param void
+ * @return void
 */
 static void print_usage(void);
 
 /**
  * @brief Prints the help menu to the user.
+ * @param void
+ * @return void
 */
 static void print_help(void);
 
@@ -38,6 +43,7 @@ static void print_help(void);
 
 int main(int argc, char* argv[])
 {
+	FILE*             input_file              = NULL;
 	apitest_Command_t command                 = { 0 };
 	bool              error                   = false;
 	int64_t           digits_count_parameter  = 0LL;
@@ -45,22 +51,36 @@ int main(int argc, char* argv[])
 	uint64_t          string_length_ret       = 0ULL;
 	double            floor_round             = 0.0;
 
-	if (2L <= argc)
+	if (1L >= argc)
+	{
+		(void)fprintf(stdout, "Running in terminal mode!\n");
+		print_usage();
+	}
+	else if (2L <= argc)
+	{
+		input_file = fopen(argv[1], "r");
+		if (NULL == input_file)
+		{
+			(void)fprintf(stdout, "Failed to open \"%s\"!\n", argv[1]);
+			(void)fprintf(stdout, "Running in terminal mode!\n\n");
+		}
+	}
+
+	if (3L <= argc)
 	{
 		(void)fprintf(stdout, "Extra parameters will be ignored!\n");
 		print_usage();
 	}
 
-	print_usage();
-
 	while (true)
 	{
-		command = apitest_get_command("apitest-test> ", NULL);
+		command = apitest_get_command("apitest-test> ", input_file);
 
 		/* Sanity checks for debugging purposes. */
 		if (0L >= command.argc)
 		{
-			(void)fprintf(stdout, "Invalid command received! (argc: %" PRId32 ")\n", command.argc);
+			(void)fprintf(stdout, "Switching to terminal mode! (EOF reached)\n");
+			input_file = NULL;
 			continue;
 		}
 
@@ -166,7 +186,7 @@ FREE_COMMAND:
 		apitest_free_command(&command);
 	}
 
-	(void)fprintf(stdout, "Process exited successfully!\n\n");
+	(void)fprintf(stdout, "Process exited successfully!\n");
 
 	return EXIT_SUCCESS;
 }

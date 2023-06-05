@@ -45,11 +45,11 @@ $(OBJ)/%.o: $(SRC)/%.c
 clean:
 ifeq (Windows_NT, $(OS))
 	$(RM) $(OBJ)\*
-	$(RM) $(LIB)\*
+	$(RM) $(BIN)\*
 endif
 ifeq (Linux, $(shell uname))
 	$(RM) $(OBJ)/*
-	$(RM) $(LIB)/*
+	$(RM) $(BIN)/*
 endif
 
 ### COPY LIBRARIES ###

@@ -4,6 +4,7 @@
  * 02.06.2023  Gaina Stefan               Initial version.                                            *
  * 03.06.2023  Gaina Stefan               Fixed argc = -1 after freeing command.                      *
  * 03.06.2023  Gaina Stefan               Added implementation for apitest_string_to_float.           *
+ * 05.06.2023  Gaina Stefan               Improved apitest_get_command with EOF detection.            *
  * @details This file implements the interface defined in apitest.h.                                  *
  * @todo While inputing the commands it would be nice to be able to navigate using the key arrows     *
  * through the command history (like in terminal). It works on Windows.                               *
@@ -53,7 +54,12 @@ READ_COMMAND:
 		(void)fprintf(stdout, "%s", title);
 	}
 
-	(void)fgets(input_buffer, sizeof(input_buffer), file);
+	if (NULL == fgets(input_buffer, sizeof(input_buffer), file)
+	 && stdin != file && 0L != feof(file))
+	{
+		command.argc = -1L;
+		return command;
+	}
 	input_buffer[APITEST_INPUT_BUFFER_SIZE - 1] = '\0'; /*< In case the buffer is not large enough. */
 
 	if (0 == apitest_string_compare("\n", input_buffer)

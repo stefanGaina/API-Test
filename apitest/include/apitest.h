@@ -4,6 +4,7 @@
  * 02.06.2023  Gaina Stefan               Initial version.                                            *
  * 03.06.2023  Gaina Stefan               Updated documentation.                                      *
  * 03.06.2023  Gaina Stefan               Added apitest_string_to_float.                              *
+ * 05.06.2023  Gaina Stefan               Specify apitest_get_command EOF behavior.                   *
  * @details This file defines the type definitions and public interface of API-Test.                  *
  * @todo N/A.                                                                                         *
  * @bug No known bugs.                                                                                *
@@ -62,7 +63,8 @@ extern "C" {
  * terminal (can be NULL, @see APITEST_DEFAULT_TITLE_NAME).
  * @param[in] file: The file where the command will be inputed from (can be NULL, will read from
  * terminal).
- * @return The command (user owns it and needs to free it).
+ * @return The command (user owns it and needs to free it). Argc will be set to -1 if reading from a
+ * file EOf is reached.
 */
 extern apitest_Command_t apitest_get_command(const char* title, FILE* file);
 
