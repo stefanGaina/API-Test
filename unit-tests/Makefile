@@ -3,6 +3,7 @@
 #   Date:       Author:                    Reason:                                                    #
 #   03.06.2023  Gaina Stefan               Initial version.                                           #
 #   03.06.2023  Gaina Stefan               Updated to invoke Makefile in dummy_library.               #
+#   05.06.2023  Gaina Stefan               Added lib_path rule.                                       #
 # Description: This Makefile is used to invoke the Makefiles in the subdirectories.                   #
 #######################################################################################################
 
@@ -11,13 +12,21 @@ export LCOV := ../../vendor/lcov/lcov.perl
 
 export CXXFLAGS = -fpermissive
 export CFLAGS   = -fpermissive -fno-inline -g -fprofile-arcs -ftest-coverage --coverage
-export LDFLAGS  = -L../../vendor/googletest/lib/ -lgtest -lgtest_main -lpthread
 
 export LCOV_BRANCH_FLAG = --rc lcov_branch_coverage=1
 
-all:
+all: lib_path
 	$(MAKE) -C apitest
 	$(MAKE) -C dummy_library
+
+### LIBRARY PATH ###
+lib_path:
+ifeq (Windows_NT, $(OS))
+export LDFLAGS  = -L../../vendor/googletest/lib/windows/ -lgtest -lgtest_main -lpthread
+endif
+ifeq (Linux, $(shell uname))
+export LDFLAGS  = -L../../vendor/googletest/lib/linux/ -lgtest -lgtest_main -lpthread
+endif
 
 ### RUN TESTS ###
 run_tests:

@@ -46,8 +46,8 @@ ifeq (Windows_NT, $(OS))
 	copy $(OBJ)\$(TESTED_FILE_NAME).gcno ..\..\dummy-lib\src
 endif
 ifeq (Linux, $(shell uname))
-	cp $(OBJ)\$(TESTED_FILE_NAME).gcda ../../dummy-lib/src/
-	cp $(OBJ)\$(TESTED_FILE_NAME).gcno ../../dummy-lib/src/
+	cp $(OBJ)/$(TESTED_FILE_NAME).gcda ../../dummy-lib/src/
+	cp $(OBJ)/$(TESTED_FILE_NAME).gcno ../../dummy-lib/src/
 endif
 	cd $(TESTED_FILE_DIR) && gcov -b $(TESTED_FILE_NAME).c
 	cd $(TESTED_FILE_DIR) && perl $(LCOV) --capture $(LCOV_BRANCH_FLAG) --directory . --output-file $(TESTED_FILE_NAME)_all.info

@@ -4,6 +4,7 @@
  * 03.06.2023  Gaina Stefan               Initial version.                                            *
  * 03.06.2023  Gaina Stefan               Added messages when expectations fail.                      *
  * 03.06.2023  Gaina Stefan               Created tests for apitest_string_to_float.                  *
+ * 05.06.2023  Gaina Stefan               Fixed failed tests on linux.                                *
  * @details This file unit-tests apitest_test.c                                                       *
  * @todo N/A.                                                                                         *
  * @bug apitest_get_command can not be tested with input from terminal.                               *
@@ -117,8 +118,9 @@ TEST_F(ApiTest, apitest_free_command)
 {
 	apitest_Command_t command = { 0 };
 
-	command.argv = (char**)malloc(sizeof(char*));
-	command.argc = 1L;
+	command.argv    = (char**)malloc(sizeof(char*));
+	command.argv[0] = NULL;
+	command.argc    = 1L;
 
 	apitest_free_command(&command);
 	EXPECT_EQ(NULL, command.argv) << "argv was not reset!";
@@ -146,41 +148,29 @@ TEST_F(ApiTest, apitest_string_compare_NULL_greater)
 
 TEST_F(ApiTest, apitest_string_compare_equal)
 {
-	const char* param = "equal";
+	const char* parameter = "equal";
 
-	EXPECT_EQ(strcmp(param, param), apitest_string_compare(param, param)) << "Incorrect comparison returned!";
+	EXPECT_EQ(0, apitest_string_compare(parameter, parameter)) << "Incorrect comparison returned!";
 }
 
 TEST_F(ApiTest, apitest_string_compare_lesser)
 {
-	const char* param1 = "abc";
-	const char* param2 = "abd";
-
-	EXPECT_EQ(strcmp(param1, param2), apitest_string_compare(param1, param2)) << "Incorrect comparison returned!";
+	EXPECT_EQ(-1, apitest_string_compare("abc", "abd")) << "Incorrect comparison returned!";
 }
 
 TEST_F(ApiTest, apitest_string_compare_greater)
 {
-	const char* param1 = "abd";
-	const char* param2 = "abc";
-
-	EXPECT_EQ(strcmp(param1, param2), apitest_string_compare(param1, param2)) << "Incorrect comparison returned!";
+	EXPECT_EQ(1, apitest_string_compare("abd", "abc")) << "Incorrect comparison returned!";
 }
 
 TEST_F(ApiTest, apitest_string_compare_longer_lesser)
 {
-	const char* param1 = "foo";
-	const char* param2 = "foo_long";
-
-	EXPECT_EQ(strcmp(param1, param2), apitest_string_compare(param1, param2)) << "Incorrect comparison returned!";
+	EXPECT_EQ(-1, apitest_string_compare("foo", "foo_long")) << "Incorrect comparison returned!";
 }
 
 TEST_F(ApiTest, apitest_string_compare_longer_greater)
 {
-	const char* param1 = "foo_long";
-	const char* param2 = "foo";
-
-	EXPECT_EQ(strcmp(param1, param2), apitest_string_compare(param1, param2)) << "Incorrect comparison returned!";
+	EXPECT_EQ(1, apitest_string_compare("foo_long", "foo")) << "Incorrect comparison returned!";
 }
 
 /******************************************************************************************************
