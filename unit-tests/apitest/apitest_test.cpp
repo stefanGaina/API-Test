@@ -81,7 +81,7 @@ TEST_F(ApiTest, apitest_get_command)
 
 	apitest_free_command(&command);
 
-	// Read the rest of the line
+	/* Read the rest of the line */
 	command = apitest_get_command(NULL , file);
 	apitest_free_command(&command);
 
