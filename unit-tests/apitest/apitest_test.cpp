@@ -81,6 +81,13 @@ TEST_F(ApiTest, apitest_get_command)
 
 	apitest_free_command(&command);
 
+	// Read the rest of the line
+	command = apitest_get_command(NULL , file);
+	apitest_free_command(&command);
+
+	command = apitest_get_command(NULL , file);
+	ASSERT_EQ(true, 0L >= command.argc) << "EOF reached but argc is still valid: " << command.argc;
+
 	(void)fclose(file);
 	file = NULL;
 }
