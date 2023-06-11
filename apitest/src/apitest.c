@@ -5,12 +5,11 @@
  * 03.06.2023  Gaina Stefan               Fixed argc = -1 after freeing command.                      *
  * 03.06.2023  Gaina Stefan               Added implementation for apitest_string_to_float.           *
  * 05.06.2023  Gaina Stefan               Improved apitest_get_command with EOF detection.            *
+ * 11.06.2023  Gaina Stefan               Added parser for input string parameters with spaces.       *
  * @details This file implements the interface defined in apitest.h.                                  *
  * @todo While inputing the commands it would be nice to be able to navigate using the key arrows     *
  * through the command history (like in terminal). It works on Windows.                               *
  * @bug apitest_string_to_integer/float does not check if the number is larger than LONG_MAX.         *
- * When inputing strings as parameters to the functions it is impossible to have spaces (can be fixed *
- * by adding "" logic when parsing the command).                                                      *
  *****************************************************************************************************/
 
 /******************************************************************************************************
@@ -32,15 +31,33 @@
 #define PRINT_PREFIX "[API-TEST] "
 
 /******************************************************************************************************
+ * LOCAL FUNCTIONS                                                                                    *
+ *****************************************************************************************************/
+
+/**
+ * @brief Created a command object from a string.
+ * @param[in] string: The string representing the command.
+ * @return The resulted command.
+*/
+static apitest_Command_t string_to_command(const char* string);
+
+/**
+ * @brief Copies a string into another.
+ * @param[out] destination: The buffer where the string will be copied.
+ * @param[in] source: The string to be copied.
+ * @param length: The length of the string copied (or the desired part, this function will add NULL
+ * terminator at the end.)
+ * @return void
+*/
+static void string_copy(char* destination, const char* source, uint64_t length);
+
+/******************************************************************************************************
  * FUNCTION DEFINITIONS                                                                               *
  *****************************************************************************************************/
 
 apitest_Command_t apitest_get_command(const char* title, FILE* file)
 {
-	apitest_Command_t command                                 = { 0 };
-	char              input_buffer[APITEST_INPUT_BUFFER_SIZE] = "";
-	char*             token                                   = NULL;
-	char**            argv_extended                           = NULL;
+	char input_buffer[APITEST_INPUT_BUFFER_SIZE] = "";
 
 READ_COMMAND:
 
@@ -57,8 +74,7 @@ READ_COMMAND:
 	if (NULL == fgets(input_buffer, sizeof(input_buffer), file)
 	 && stdin != file && 0L != feof(file))
 	{
-		command.argc = -1L;
-		return command;
+		return (apitest_Command_t){ -1L, NULL };
 	}
 	input_buffer[APITEST_INPUT_BUFFER_SIZE - 1] = '\0'; /*< In case the buffer is not large enough. */
 
@@ -74,29 +90,7 @@ READ_COMMAND:
 	}
 	(void)fprintf(stdout, "%s\n", input_buffer);
 
-	token = strtok(input_buffer, " ");
-	while (NULL != token)
-	{
-		argv_extended = (char**)realloc(command.argv, ++command.argc * sizeof(char*));
-		if (NULL == argv_extended)
-		{
-			(void)fprintf(stdout, PRINT_PREFIX "Out of memory!\n");
-			break;
-		}
-		command.argv = argv_extended;
-
-		command.argv[command.argc - 1UL] = (char*)malloc(strlen(token) + 1ULL);
-		if (NULL == command.argv[command.argc - 1UL])
-		{
-			(void)fprintf(stdout, PRINT_PREFIX "Out of memory!\n");
-			break;
-		}
-		(void)strcpy(command.argv[command.argc - 1UL], token);
-
-		token = strtok(NULL, " ");
-	}
-
-	return command;
+	return string_to_command(input_buffer);
 }
 
 void apitest_free_command(apitest_Command_t* command)
@@ -332,4 +326,81 @@ CHECK_SIGN:
 	}
 
 	return result_float;
+}
+
+static apitest_Command_t string_to_command(const char* string)
+{
+	apitest_Command_t command         = { 0 };
+	char**            argv_extended   = NULL;
+	uint64_t          argument_length = 0ULL;
+
+	while ('\0' != *string)
+	{
+		while (' ' == *string)
+		{
+			++string;
+		}
+
+		if ('\0' == *string)
+		{
+			break;
+		}
+
+		argument_length = 0ULL;
+		if ('\"' == *string)
+		{
+			++string;
+			while ('\"' != *(string + argument_length))
+			{
+				if ('\0' == *(string + argument_length))
+				{
+					(void)fprintf(stdout, "\" was not closed!\n");
+					return command;
+				}
+				++argument_length;
+			}
+		}
+		else
+		{
+			while (' ' != *(string + argument_length) && '\0' != *(string + argument_length))
+			{
+				++argument_length;
+			}
+		}
+
+		argv_extended = (char**)realloc(command.argv, ++command.argc * sizeof(char*));
+		if (NULL == argv_extended)
+		{
+			(void)fprintf(stdout, PRINT_PREFIX "Out of memory!\n");
+			break;
+		}
+		command.argv = argv_extended;
+
+		command.argv[command.argc - 1UL] = (char*)malloc(argument_length + 1ULL);
+		if (NULL == command.argv[command.argc - 1UL])
+		{
+			(void)fprintf(stdout, PRINT_PREFIX "Out of memory!\n");
+			break;
+		}
+		string_copy(command.argv[command.argc - 1UL], string, argument_length);
+		string += argument_length;
+
+		if ('\"' == *(string))
+		{
+			++string;
+		}
+	}
+
+	return command;
+}
+
+static void string_copy(char* destination, const char* source, uint64_t length)
+{
+	uint64_t index = 0ULL;
+
+	for (; index < length; ++index)
+	{
+		destination[index] = source[index];
+	}
+	destination[index] = '\0';
 }

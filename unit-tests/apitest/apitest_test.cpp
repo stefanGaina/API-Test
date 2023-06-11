@@ -5,6 +5,7 @@
  * 03.06.2023  Gaina Stefan               Added messages when expectations fail.                      *
  * 03.06.2023  Gaina Stefan               Created tests for apitest_string_to_float.                  *
  * 05.06.2023  Gaina Stefan               Fixed failed tests on linux.                                *
+ * 11.06.2023  Gaina Stefan               Updated apitest_get_command test.                           *
  * @details This file unit-tests apitest_test.c                                                       *
  * @todo N/A.                                                                                         *
  * @bug apitest_get_command can not be tested with input from terminal.                               *
@@ -65,6 +66,21 @@ TEST_F(ApiTest, apitest_get_command)
 	EXPECT_EQ(0L, strcmp("word2", command.argv[1]));
 	ASSERT_EQ(false, NULL == command.argv[2]) << "argv[2] is invalid!";
 	EXPECT_EQ(0L, strcmp("word3", command.argv[2]));
+
+	apitest_free_command(&command);
+
+	command = apitest_get_command(NULL, file);
+	ASSERT_EQ(false, NULL == command.argv) << "argv is invalid!";
+	ASSERT_EQ(false, 0L   >= command.argc) << "argc is invalid!";
+
+	ASSERT_EQ(3L, command.argc) << "argc was not set correctly!";
+
+	ASSERT_EQ(false, NULL == command.argv[0]) << "argv[0] is invalid!";
+	EXPECT_EQ(0L, strcmp("word1 word2", command.argv[0]));
+	ASSERT_EQ(false, NULL == command.argv[1]) << "argv[1] is invalid!";
+	EXPECT_EQ(0L, strcmp("word3", command.argv[1]));
+	ASSERT_EQ(false, NULL == command.argv[2]) << "argv[2] is invalid!";
+	EXPECT_EQ(0L, strcmp("word4 word5", command.argv[2]));
 
 	apitest_free_command(&command);
 

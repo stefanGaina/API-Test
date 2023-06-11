@@ -2,7 +2,7 @@ dummy_digits_count 123
 
 oops
 
-dummy_string_length abcd
+dummy_string_length "abcd abc"
 
 dummy_floor_round 123.12345
 

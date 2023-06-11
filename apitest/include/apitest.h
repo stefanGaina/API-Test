@@ -5,6 +5,7 @@
  * 03.06.2023  Gaina Stefan               Updated documentation.                                      *
  * 03.06.2023  Gaina Stefan               Added apitest_string_to_float.                              *
  * 05.06.2023  Gaina Stefan               Specify apitest_get_command EOF behavior.                   *
+ * 11.06.2023  Gaina Stefan               Changed the order of the memebers in apitest_Command_t.     *
  * @details This file defines the type definitions and public interface of API-Test.                  *
  * @todo N/A.                                                                                         *
  * @bug No known bugs.                                                                                *
@@ -45,8 +46,8 @@
 */
 typedef struct s_apitest_Command_t
 {
-	char**  argv; /**< The command splitted by arguments.        */
 	int32_t argc; /**< How many arguments does the command have. */
+	char**  argv; /**< The command splitted by arguments.        */
 } apitest_Command_t;
 
 /******************************************************************************************************

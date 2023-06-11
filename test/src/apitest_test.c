@@ -5,6 +5,7 @@
  * 03.06.2023  Gaina Stefan               Update documentation.                                       *
  * 03.06.2023  Gaina Stefan               Added option for dummy_floor_round.                         *
  * 05.06.2023  Gaina Stefan               Added testing from file option.                             *
+ * 11.06.2023  Gaina Stefan               Implemented print_usage and print_help.                     *
  * @details This file is an example of a testing application based on API-Test.                       *
  * @todo N/A.                                                                                         *
  * @bug No known bugs.                                                                                *
@@ -76,14 +77,14 @@ int main(int argc, char* argv[])
 	{
 		command = apitest_get_command("apitest-test> ", input_file);
 
-		/* Sanity checks for debugging purposes. */
 		if (0L >= command.argc)
 		{
-			(void)fprintf(stdout, "Switching to terminal mode! (EOF reached)\n");
+			(void)fprintf(stdout, "Switching to terminal mode! (EOF reached)\n\n");
 			input_file = NULL;
 			continue;
 		}
 
+		/* Sanity checks for debugging purposes. */
 		if (NULL == command.argv)
 		{
 			(void)fprintf(stdout, "Invalid command received! (argv is NULL)\n");
@@ -177,6 +178,8 @@ int main(int argc, char* argv[])
 
 			floor_round = dummy_floor_round(floor_round);
 			(void)fprintf(stdout, "dummy_floor_round = %lf\n\n", floor_round);
+
+			goto FREE_COMMAND;
 		}
 
 		(void)fprintf(stdout, "Command is not valid! (press h for help)\n\n");
@@ -193,10 +196,12 @@ FREE_COMMAND:
 
 static void print_usage(void)
 {
-
+	(void)fprintf(stdout, "<executable_name> <path_to_input_file> (optional)\n\n");
 }
 
 static void print_help(void)
 {
-
+	(void)fprintf(stdout, "dummy_digits_count  <integer>\n");
+	(void)fprintf(stdout, "dummy_string_length <string>\n");
+	(void)fprintf(stdout, "dummy_floor_round   <number>\n\n");
 }

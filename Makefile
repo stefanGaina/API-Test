@@ -4,6 +4,7 @@
 #   02.06.2023  Gaina Stefan               Initial version.                                           #
 #   03.06.2023  Gaina Stefan               Updated with rules for unit-test.                          #
 #   05.06.2023  Gaina Stefan               Added detect_os rule.                                      #
+#   11.06.2023  Gaina Stefan               Updated ut-clean rule.                                     #
 # Description: This Makefile is used to invoke the Makefiles in the subdirectories.                   #
 #######################################################################################################
 
@@ -51,7 +52,20 @@ endif
 
 ### CLEAN UNIT-TESTS ###
 ut-clean: detect_os
-	$(RM) $(COVERAGE_REPORT)
+ifeq (Windows_NT, $(OS))
+	$(RM) $(COVERAGE_REPORT)\*
+	$(RM) $(COVERAGE_REPORT)\apitest\src\*
+	$(RM) $(COVERAGE_REPORT)\dummy-lib\src\*
+	rd /s /q $(COVERAGE_REPORT)\apitest
+	rd /s /q $(COVERAGE_REPORT)\dummy-lib
+endif
+ifeq (Linux, $(shell uname))
+	$(RM) $(COVERAGE_REPORT)/*
+	$(RM) $(COVERAGE_REPORT)/apitest/src/*
+	$(RM) $(COVERAGE_REPORT)/dummy-lib/src/*
+	rmdir -p $(COVERAGE_REPORT)/apitest
+	rmdir -p $(COVERAGE_REPORT)/dummy-lib
+endif
 
 ### DETECT OPERATING SYSTEM ###
 detect_os:
