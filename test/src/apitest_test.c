@@ -267,7 +267,7 @@ static void print_version(void)
 	if (APITEST_VERSION_MAJOR != version.major
 	 || APITEST_VERSION_MINOR != version.minor)
 	{
-		(void)fprintf(stdout, "Version mismatch! (header version: %" PRIu8 ".%" PRIu8 ")\n", APITEST_VERSION_MAJOR, APITEST_VERSION_MINOR);
+		(void)fprintf(stdout, "Version mismatch! (compiled version: %" PRIu8 ".%" PRIu8 ")\n", APITEST_VERSION_MAJOR, APITEST_VERSION_MINOR);
 	}
 }
 

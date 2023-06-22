@@ -7,6 +7,7 @@
  * 05.06.2023  Gaina Stefan               Specify apitest_get_command EOF behavior.                   *
  * 11.06.2023  Gaina Stefan               Changed the order of the memebers in apitest_Command_t.     *
  * 22.06.2023  Gaina Stefan               Added apitest_get_version function.                         *
+ * 22.06.2023  Gaina Stefan               Fixed version.                                              *
  * @details This file defines the type definitions and public interface of API-Test.                  *
  * @todo N/A.                                                                                         *
  * @bug No known bugs.                                                                                *
@@ -39,14 +40,14 @@
 #define APITEST_INPUT_BUFFER_SIZE 1024
 
 /**
- * @brief The header major version (also set at compilation time).
+ * @brief The compiled major version.
 */
 #define APITEST_VERSION_MAJOR 1
 
 /**
- * @brief The header minor version (also set at compilation time).
+ * @brief The compiled minor version.
 */
-#define APITEST_VERSION_MINOR 1
+#define APITEST_VERSION_MINOR 0
 
 /******************************************************************************************************
  * TYPE DEFINITIONS                                                                                   *
