@@ -6,10 +6,12 @@
  * 03.06.2023  Gaina Stefan               Added implementation for apitest_string_to_float.           *
  * 05.06.2023  Gaina Stefan               Improved apitest_get_command with EOF detection.            *
  * 11.06.2023  Gaina Stefan               Added parser for input string parameters with spaces.       *
+ * 22.06.2023  Gaina Stefan               Refactored apitest_string_to_integer.                       *
  * @details This file implements the interface defined in apitest.h.                                  *
  * @todo While inputing the commands it would be nice to be able to navigate using the key arrows     *
  * through the command history (like in terminal). It works on Windows.                               *
- * @bug apitest_string_to_integer/float does not check if the number is larger than LONG_MAX.         *
+ * @bug When numbers are negative they are capped at -LLONG_MAX instead of LLONG_MIN.                 *
+ * apitest_string_to_float needs to be updated to check for limits.                                   *
  *****************************************************************************************************/
 
 /******************************************************************************************************
@@ -151,19 +153,14 @@ int16_t apitest_string_compare(const char* string1, const char* string2)
 	return EQUAL;
 }
 
-int64_t apitest_string_to_integer(const char* string, bool* error)
+apitest_Error_t apitest_string_to_integer(const char* string, int64_t* integer)
 {
-	int64_t result_integer = 0LL;
-	bool    is_negative    = false;
+	apitest_Error_t error       = E_APITEST_ERROR_NONE;
+	bool            is_negative = false;
 
-	if (NULL != error)
+	if (NULL == string || '\0' == *string || NULL == integer)
 	{
-		*error = true;
-	}
-
-	if (NULL == string || '\0' == *string)
-	{
-		return 0LL;
+		return E_APITEST_ERROR_INVALID_PARAMETER;
 	}
 
 	if ('-' == *string)
@@ -171,6 +168,7 @@ int64_t apitest_string_to_integer(const char* string, bool* error)
 		is_negative = true;
 		++string;
 	}
+	*integer = 0LL;
 
 	/* base 2 */
 	if ('0' == *string && 'b' == *(string + 1ULL))
@@ -179,11 +177,19 @@ int64_t apitest_string_to_integer(const char* string, bool* error)
 
 		do
 		{
+			if (LLONG_MAX / 2LL < *integer)
+			{
+				error = E_APITEST_ERROR_OUT_OF_RANGE;
+				goto CHECK_SIGN;
+			}
+
 			if ('0' > *string || '1' < *string)
 			{
-				return 0LL;
+				error = E_APITEST_ERROR_INVALID_CHARACTER;
+				goto CHECK_SIGN;
 			}
-			result_integer = result_integer * 2LL + (*string - '0');
+
+			*integer = *integer * 2LL + (*string - '0');
 		}
 		while ('\0' != *++string);
 
@@ -197,17 +203,24 @@ int64_t apitest_string_to_integer(const char* string, bool* error)
 
 		do
 		{
+			if (LLONG_MAX / 16LL < *integer)
+			{
+				error = E_APITEST_ERROR_OUT_OF_RANGE;
+				goto CHECK_SIGN;
+			}
+
 			if ('0' <= *string && '9' >= *string)
 			{
-				result_integer = result_integer * 16LL + (*string - '0');
+				*integer = *integer * 16LL + (*string - '0');
 			}
 			else if ('A' <= *string && 'F' >= *string)
 			{
-				result_integer = result_integer * 16LL + (*string - '7');
+				*integer = *integer * 16LL + (*string - '7');
 			}
 			else
 			{
-				return 0LL;
+				error = E_APITEST_ERROR_INVALID_CHARACTER;
+				goto CHECK_SIGN;
 			}
 		}
 		while ('\0' != *++string);
@@ -222,11 +235,19 @@ int64_t apitest_string_to_integer(const char* string, bool* error)
 
 		do
 		{
+			if (LLONG_MAX / 8LL < *integer)
+			{
+				error = E_APITEST_ERROR_OUT_OF_RANGE;
+				goto CHECK_SIGN;
+			}
+
 			if ('0' > *string || '7' < *string)
 			{
-				return 0LL;
+				error = E_APITEST_ERROR_INVALID_CHARACTER;
+				goto CHECK_SIGN;
 			}
-			result_integer = result_integer * 8LL + (*string - '0');
+
+			*integer = *integer * 8LL + (*string - '0');
 		}
 		while ('\0' != *++string);
 
@@ -236,11 +257,20 @@ int64_t apitest_string_to_integer(const char* string, bool* error)
 	/* base 10 */
 	do
 	{
+		if ( LLONG_MAX / 10LL < *integer
+		 || (LLONG_MAX / 10LL == *integer && '7' < *string))
+		{
+			error = E_APITEST_ERROR_OUT_OF_RANGE;
+			goto CHECK_SIGN;
+		}
+
 		if ('0' > *string || '9' < *string)
 		{
-			return 0LL;
+			error = E_APITEST_ERROR_INVALID_CHARACTER;
+			goto CHECK_SIGN;
 		}
-		result_integer = result_integer * 10LL + (*string - '0');
+
+		*integer = *integer * 10LL + (*string - '0');
 	}
 	while ('\0' != *++string);
 
@@ -248,31 +278,21 @@ CHECK_SIGN:
 
 	if (true == is_negative)
 	{
-		result_integer *= -1;
+		*integer *= -1;
 	}
 
-	if (NULL != error)
-	{
-		*error = false;
-	}
-
-	return result_integer;
+	return error;
 }
 
-double apitest_string_to_float(const char* string, bool* error)
+apitest_Error_t apitest_string_to_float(const char* string, double* floating_number)
 {
-	double result_float  = 0.0;
-	double fraction_part = 0.0;
-	bool   is_negative   = false;
+	apitest_Error_t error         = E_APITEST_ERROR_NONE;
+	bool            is_negative   = false;
+	double          fraction_part = 0.0;
 
-	if (NULL != error)
+	if (NULL == string || '\0' == *string || NULL == floating_number)
 	{
-		*error = true;
-	}
-
-	if (NULL == string || '\0' == *string)
-	{
-		return 0.0;
+		return E_APITEST_ERROR_INVALID_PARAMETER;
 	}
 
 	if ('-' == *string)
@@ -286,9 +306,10 @@ double apitest_string_to_float(const char* string, bool* error)
 	{
 		if ('0' > *string || '9' < *string)
 		{
-			return 0.0;
+			error = E_APITEST_ERROR_INVALID_CHARACTER;
+			goto CHECK_SIGN;
 		}
-		result_float = result_float * 10.0 + (*string - '0');
+		*floating_number = *floating_number * 10.0 + (*string - '0');
 
 		if ('\0' == *++string)
 		{
@@ -302,7 +323,8 @@ double apitest_string_to_float(const char* string, bool* error)
 	{
 		if ('0' > *string || '9' < *string)
 		{
-			return 0.0;
+			error = E_APITEST_ERROR_INVALID_CHARACTER;
+			goto CHECK_SIGN;
 		}
 		fraction_part = fraction_part * 10.0 + (*string - '0');
 	}
@@ -311,21 +333,21 @@ double apitest_string_to_float(const char* string, bool* error)
 	{
 		fraction_part /= 10.0;
 	}
-	result_float += fraction_part;
+	*floating_number += fraction_part;
 
 CHECK_SIGN:
 
 	if (true == is_negative)
 	{
-		result_float *= -1.0;
+		*floating_number *= -1.0;
 	}
 
-	if (NULL != error)
-	{
-		*error = false;
-	}
+	return error;
+}
 
-	return result_float;
+apitest_Version_t apitest_get_version(void)
+{
+	return (apitest_Version_t){ APITEST_VERSION_MAJOR, APITEST_VERSION_MINOR };
 }
 
 static apitest_Command_t string_to_command(const char* string)

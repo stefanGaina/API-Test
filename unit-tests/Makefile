@@ -4,6 +4,7 @@
 #   03.06.2023  Gaina Stefan               Initial version.                                           #
 #   03.06.2023  Gaina Stefan               Updated to invoke Makefile in dummy_library.               #
 #   05.06.2023  Gaina Stefan               Added lib_path rule.                                       #
+#   05.06.2023  Gaina Stefan               Improved lib_path rule.                                    #
 # Description: This Makefile is used to invoke the Makefiles in the subdirectories.                   #
 #######################################################################################################
 
@@ -21,12 +22,7 @@ all: lib_path
 
 ### LIBRARY PATH ###
 lib_path:
-ifeq (Windows_NT, $(OS))
-export LDFLAGS  = -L../../vendor/googletest/lib/windows/ -lgtest -lgtest_main -lpthread
-endif
-ifeq (Linux, $(shell uname))
-export LDFLAGS  = -L../../vendor/googletest/lib/linux/ -lgtest -lgtest_main -lpthread
-endif
+export LDFLAGS  = -L../../vendor/googletest/lib/$(OS_DIR)/ -lgtest -lgtest_main -lpthread
 
 ### RUN TESTS ###
 run_tests:

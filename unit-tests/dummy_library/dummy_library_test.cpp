@@ -3,6 +3,7 @@
  * @date:      @author:                   Reason for change:                                          *
  * 03.06.2023  Gaina Stefan               Initial version.                                            *
  * 03.06.2023  Gaina Stefan               Created tests for dummy_floor_round.                        *
+ * 22.06.2023  Gaina Stefan               Removed redundant ;.                                        *
  * @details This file unit-tests dummy_library.c                                                      *
  * @todo N/A.                                                                                         *
  * @bug No known bugs.                                                                                *
@@ -43,17 +44,17 @@ void DummyLibTest::TearDown(void)
 
 TEST_F(DummyLibTest, dummy_digits_count_0_success)
 {
-	EXPECT_EQ(1U, dummy_digits_count(0LL)) << "Wrong count returned!";;
+	EXPECT_EQ(1U, dummy_digits_count(0LL)) << "Wrong count returned!";
 }
 
 TEST_F(DummyLibTest, dummy_digits_count_positive_success)
 {
-	EXPECT_EQ(3U, dummy_digits_count(123LL)) << "Wrong count returned!";;
+	EXPECT_EQ(3U, dummy_digits_count(123LL)) << "Wrong count returned!";
 }
 
 TEST_F(DummyLibTest, dummy_digits_count_negative_success)
 {
-	EXPECT_EQ(9U, dummy_digits_count(-123456789LL)) << "Wrong count returned!";;
+	EXPECT_EQ(9U, dummy_digits_count(-123456789LL)) << "Wrong count returned!";
 }
 
 /******************************************************************************************************

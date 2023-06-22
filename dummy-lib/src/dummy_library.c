@@ -5,6 +5,7 @@
  * 03.06.2023  Gaina Stefan               Fixed digit count of 0 = 0.                                 *
  * 03.06.2023  Gaina Stefan               Added implementation for dummy_floor_round.                 *
  * 05.06.2023  Gaina Stefan               Fixed compilatioon error without stdder.h on linux.         *
+ * 22.06.2023  Gaina Stefan               Fixed dummy_digits_count counting 9 twice.                  *
  * @details This file implements the interface defined in dummy_library.h.                            *
  * @todo N/A.                                                                                         *
  * @bug No known bugs.                                                                                *
@@ -31,7 +32,7 @@ uint16_t dummy_digits_count(int64_t integer)
 		integer *= -1L;
 	}
 
-	while (9LL <= integer)
+	while (9LL < integer)
 	{
 		integer /= 10;
 		++digits_count;

@@ -6,8 +6,8 @@ obj
 *.o
 
 # Libraries
-apitest/lib/*
-dummy-lib/lib/*
+apitest/lib
+dummy-lib/lib
 
 # Executables
 test/bin/*
