@@ -7,6 +7,7 @@
  * 05.06.2023  Gaina Stefan               Improved apitest_get_command with EOF detection.            *
  * 11.06.2023  Gaina Stefan               Added parser for input string parameters with spaces.       *
  * 22.06.2023  Gaina Stefan               Refactored apitest_string_to_integer.                       *
+ * 24.06.2023  Gaina Stefan               Fixed compilation error on linux.                           *
  * @details This file implements the interface defined in apitest.h.                                  *
  * @todo While inputing the commands it would be nice to be able to navigate using the key arrows     *
  * through the command history (like in terminal). It works on Windows.                               *
@@ -20,6 +21,7 @@
 
 #include <string.h>
 #include <stdlib.h>
+#include <limits.h>
 
 #include "apitest.h"
 
