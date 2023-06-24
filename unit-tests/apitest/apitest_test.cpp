@@ -8,7 +8,7 @@
  * 11.06.2023  Gaina Stefan               Updated apitest_get_command test.                           *
  * 22.06.2023  Gaina Stefan               Refactored apitest_string_to_integer tests.                 *
  * @details This file unit-tests apitest.c                                                            *
- * @todo N/A.                                                                                         *
+ * @todo apitest_string_to_float tests to be refactored when it will be updated to check for limits.  *
  * @bug apitest_get_command can not be tested with input from terminal.                               *
  *****************************************************************************************************/
 
