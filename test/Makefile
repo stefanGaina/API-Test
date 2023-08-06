@@ -5,12 +5,13 @@
 #   02.06.2023  Gaina Stefan               Fixed copy_libraries rule.                                 #
 #   03.06.2023  Gaina Stefan               Updated to support parent Makefile updates.                #
 #   05.06.2023  Gaina Stefan               Fixed rules for linux.                                     #
+#   06.08.2023  Gaina Stefan               Renamed linked library.                                    #
 # Description: This Makefile is used to generate an example for API-Test loading a dummy library and  #
 # testing its API.                                                                                    #
 #######################################################################################################
 
 CFLAGS  = -Wall -Werror
-LDFLAGS = -Wl,-rpath='.' -L../apitest/lib/ -lapitest \
+LDFLAGS = -Wl,-rpath='.' -L../apitest/lib/ -lAPI-Test \
 		  -Wl,-rpath='.' -L../dummy-lib/lib/ -ldummy
 
 INCLUDES = -I../apitest/include/ \
@@ -55,10 +56,10 @@ endif
 ### COPY LIBRARIES ###
 copy_libraries:
 ifeq (Windows_NT, $(OS))
-	copy ..\apitest\lib\libapitest.$(LIB_EXTENSION) bin
+	copy ..\apitest\lib\API-Test.$(LIB_EXTENSION) bin
 	copy ..\dummy-lib\lib\libdummy.$(LIB_EXTENSION) bin
 endif
 ifeq (Linux, $(shell uname))
-	cp ../apitest/lib/libapitest.$(LIB_EXTENSION) bin/
+	cp ../apitest/lib/API-Test.$(LIB_EXTENSION) bin/
 	cp ../dummy-lib/lib/libdummy.$(LIB_EXTENSION) bin/
 endif
