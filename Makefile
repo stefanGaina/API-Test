@@ -6,6 +6,7 @@
 #   05.06.2023  Gaina Stefan               Added detect_os rule.                                      #
 #   11.06.2023  Gaina Stefan               Updated ut-clean rule.                                     #
 #   22.06.2023  Gaina Stefan               Fix ut-clean rule on linux.                                #
+#   06.08.2023  Gaina Stefan               Added apitest_version to info files.                       #
 # Description: This Makefile is used to invoke the Makefiles in the subdirectories.                   #
 #######################################################################################################
 
@@ -21,7 +22,8 @@ export COVERAGE_REPORT := coverage_report
 GENHTML       = vendor/lcov/genhtml.perl
 GENHTML_FLAGS = --branch-coverage --num-spaces=4 --output-directory coverage_report/
 
-INFO_FILES = $(COVERAGE_REPORT)/apitest.info \
+INFO_FILES = $(COVERAGE_REPORT)/apitest.info         \
+			 $(COVERAGE_REPORT)/apitest_version.info \
 			 $(COVERAGE_REPORT)/dummy_library.info
 
 ### MAKE SUBDIRECTORIES ###

@@ -7,6 +7,7 @@
  * 05.06.2023  Gaina Stefan               Added testing from file option.                             *
  * 11.06.2023  Gaina Stefan               Implemented print_usage and print_help.                     *
  * 22.06.2023  Gaina Stefan               Added print_version and refactored with handle_commands.    *
+ * 06.08.2023  Gaina Stefan               Added patch version check.                                  *
  * @details This file is an example of a testing application based on API-Test.                       *
  * @todo N/A.                                                                                         *
  * @bug No known bugs.                                                                                *
@@ -19,6 +20,7 @@
 #include <stdlib.h>
 
 #include "apitest.h"
+#include "apitest_version.h"
 #include "dummy_library.h"
 
 /******************************************************************************************************
@@ -259,15 +261,14 @@ FREE_COMMAND:
 
 static void print_version(void)
 {
-	apitest_Version_t version = { 0 };
+	apitest_Version_t version = apitest_get_version();
 
-	version = apitest_get_version();
-	(void)fprintf(stdout, "Using API-Test %" PRIu8 ".%" PRIu8 "\n", version.major, version.minor);
-
+	(void)fprintf(stdout, "Using API-Test %" PRIu8 ".%" PRIu8 ".%" PRIu8 "\n", version.major, version.minor, version.patch);
 	if (APITEST_VERSION_MAJOR != version.major
-	 || APITEST_VERSION_MINOR != version.minor)
+	 || APITEST_VERSION_MINOR != version.minor
+	 || APITEST_VERSION_PATCH != version.patch)
 	{
-		(void)fprintf(stdout, "Version mismatch! (compiled version: %" PRIu8 ".%" PRIu8 ")\n", APITEST_VERSION_MAJOR, APITEST_VERSION_MINOR);
+		(void)fprintf(stdout, "Version mismatch! (compiled version: %" PRIu8 ".%" PRIu8 ".%" PRIu8 ")\n", APITEST_VERSION_MAJOR, APITEST_VERSION_MINOR, APITEST_VERSION_PATCH);
 	}
 }
 

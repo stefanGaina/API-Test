@@ -8,6 +8,7 @@
  * 11.06.2023  Gaina Stefan               Added parser for input string parameters with spaces.       *
  * 22.06.2023  Gaina Stefan               Refactored apitest_string_to_integer.                       *
  * 24.06.2023  Gaina Stefan               Fixed compilation error on linux.                           *
+ * 06.08.2023  Gaina Stefan               Removed apitest_get_version.                                *
  * @details This file implements the interface defined in apitest.h.                                  *
  * @todo While inputing the commands it would be nice to be able to navigate using the key arrows     *
  * through the command history (like in terminal). It works on Windows.                               *
@@ -97,7 +98,7 @@ READ_COMMAND:
 	return string_to_command(input_buffer);
 }
 
-void apitest_free_command(apitest_Command_t* command)
+void apitest_free_command(apitest_Command_t* const command)
 {
 	if (NULL == command || 0L >= command->argc)
 	{
@@ -155,7 +156,7 @@ int16_t apitest_string_compare(const char* string1, const char* string2)
 	return EQUAL;
 }
 
-apitest_Error_t apitest_string_to_integer(const char* string, int64_t* integer)
+apitest_Error_t apitest_string_to_integer(const char* string, int64_t* const integer)
 {
 	apitest_Error_t error       = E_APITEST_ERROR_NONE;
 	bool            is_negative = false;
@@ -286,7 +287,7 @@ CHECK_SIGN:
 	return error;
 }
 
-apitest_Error_t apitest_string_to_float(const char* string, double* floating_number)
+apitest_Error_t apitest_string_to_float(const char* string, double* const floating_number)
 {
 	apitest_Error_t error         = E_APITEST_ERROR_NONE;
 	bool            is_negative   = false;
@@ -345,11 +346,6 @@ CHECK_SIGN:
 	}
 
 	return error;
-}
-
-apitest_Version_t apitest_get_version(void)
-{
-	return (apitest_Version_t){ APITEST_VERSION_MAJOR, APITEST_VERSION_MINOR };
 }
 
 static apitest_Command_t string_to_command(const char* string)
@@ -418,7 +414,7 @@ static apitest_Command_t string_to_command(const char* string)
 	return command;
 }
 
-static void string_copy(char* destination, const char* source, uint64_t length)
+static void string_copy(char* const destination, const char* const source, const uint64_t length)
 {
 	uint64_t index = 0ULL;
 

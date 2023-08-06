@@ -10,7 +10,7 @@ apitest/lib
 dummy-lib/lib
 
 # Executables
-test/bin/*
+test/bin
 
 # Unit-test
 coverage_report

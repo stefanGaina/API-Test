@@ -8,6 +8,7 @@
  * 11.06.2023  Gaina Stefan               Updated apitest_get_command test.                           *
  * 22.06.2023  Gaina Stefan               Refactored apitest_string_to_integer tests.                 *
  * 24.06.2023  Gaina Stefan               Fixed compilation error on linux.                           *
+ * 06.08.2023  Gaina Stefan               Removed version test.                                       *
  * @details This file unit-tests apitest.c                                                            *
  * @todo apitest_string_to_float tests to be refactored when it will be updated to check for limits.  *
  * @bug apitest_get_command can not be tested with input from terminal.                               *
@@ -752,16 +753,3 @@ TEST_F(ApiTest, apitest_string_to_integer_hexadecimal_negative_leadingZeros_succ
 // 	EXPECT_EQ(0.0, apitest_string_to_float("-199890.222301 INVALID_STRING", &error)) << "Incorrect float returned!";
 // 	EXPECT_EQ(true, error) << "error was not set!";
 // }
-
-/******************************************************************************************************
- * apitest_get_version                                                                                *
- *****************************************************************************************************/
-
-TEST_F(ApiTest, apitest_get_version_success)
-{
-	apitest_Version_t version = { 0 };
-
-	version = apitest_get_version();
-	EXPECT_EQ(APITEST_VERSION_MAJOR, version.major) << "Latest major version has changed!";
-	EXPECT_EQ(APITEST_VERSION_MINOR, version.minor) << "Latest minor version has changed!";
-}
