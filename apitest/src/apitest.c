@@ -352,7 +352,7 @@ static apitest_Command_t string_to_command(const char* string)
 {
 	apitest_Command_t command         = { 0 };
 	char**            argv_extended   = NULL;
-	uint64_t          argument_length = 0ULL;
+	size_t            argument_length = 0ULL;
 
 	while ('\0' != *string)
 	{
@@ -414,9 +414,9 @@ static apitest_Command_t string_to_command(const char* string)
 	return command;
 }
 
-static void string_copy(char* const destination, const char* const source, const uint64_t length)
+static void string_copy(char* const destination, const char* const source, const size_t length)
 {
-	uint64_t index = 0ULL;
+	size_t index = 0ULL;
 
 	for (; index < length; ++index)
 	{

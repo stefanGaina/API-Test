@@ -2,6 +2,7 @@
  * @file apitest_version.h                                                                            *
  * @date:      @author:                   Reason for change:                                          *
  * 06.08.2023  Gaina Stefan               Initial version.                                            *
+ * 07.08.2023  Gaina Stefan               Added cast to macros.                                       *
  * @details This file defines the type definition for version structure and defines a getter.         *
  * @todo N/A.                                                                                         *
  * @bug No known bugs.                                                                                *
@@ -23,17 +24,17 @@
 /**
  * @brief The compiled major version.
 */
-#define APITEST_VERSION_MAJOR 1
+#define APITEST_VERSION_MAJOR (uint8_t)1U
 
 /**
  * @brief The compiled minor version.
 */
-#define APITEST_VERSION_MINOR 0
+#define APITEST_VERSION_MINOR (uint8_t)0U
 
 /**
  * @brief The compiled patch version.
 */
-#define APITEST_VERSION_PATCH 1
+#define APITEST_VERSION_PATCH (uint8_t)1U
 
 /******************************************************************************************************
  * TYPE DEFINITIONS                                                                                   *

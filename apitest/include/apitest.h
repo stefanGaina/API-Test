@@ -21,7 +21,7 @@
  * HEADER FILE INCLUDES                                                                               *
  *****************************************************************************************************/
 
-#include <inttypes.h>
+#include <stdint.h>
 #include <stdbool.h>
 #include <stdio.h>
 
