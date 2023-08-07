@@ -95,7 +95,7 @@ int main(int argc, char* argv[])
 
 static void handle_commands(FILE* input_file)
 {
-	apitest_Command_t command                = { 0 };
+	apitest_Command_t command                = { .argc = 0L, .argv = NULL };
 	apitest_Error_t   error                  = E_APITEST_ERROR_NONE;
 	int64_t           digits_count_parameter = 0LL;
 	uint16_t          digits_count_ret       = 0U;
