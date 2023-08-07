@@ -60,6 +60,6 @@ ifeq (Windows_NT, $(OS))
 	copy ..\dummy-lib\$(LIB)\libdummy.$(LIB_EXTENSION) $(BIN)
 endif
 ifeq (Linux, $(shell uname))
-	cp ../apitest/$(LIB)/API-Test.$(LIB_EXTENSION) $(BIN)/
+	cp ../apitest/$(LIB)/libapitest.$(LIB_EXTENSION) $(BIN)/
 	cp ../dummy-lib/$(LIB)/libdummy.$(LIB_EXTENSION) $(BIN)/
 endif
