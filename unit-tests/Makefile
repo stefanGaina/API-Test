@@ -24,7 +24,7 @@ all: lib_path
 
 ### LIBRARY PATH ###
 lib_path:
-export LDFLAGS  = -L../../vendor/googletest/lib/$(OS_DIR)/ -lgtest -lgtest_main -lpthread
+export LDFLAGS  = -L../../vendor/googletest/$(LIB)/$(OS_DIR)/ -lgtest -lgtest_main -lpthread
 
 ### RUN TESTS ###
 run_tests:

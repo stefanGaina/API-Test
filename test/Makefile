@@ -11,8 +11,8 @@
 #######################################################################################################
 
 CFLAGS  = -Wall -Werror
-LDFLAGS = -Wl,-rpath='.' -L../apitest/lib/ -lapitest \
-		  -Wl,-rpath='.' -L../dummy-lib/lib/ -ldummy
+LDFLAGS = -Wl,-rpath='.' -L../apitest/$(LIB)/ -lapitest \
+		  -Wl,-rpath='.' -L../dummy-lib/$(LIB)/ -ldummy
 
 INCLUDES = -I../apitest/include/ \
 		   -I../dummy-lib/include/
