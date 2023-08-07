@@ -4,7 +4,6 @@
 #   02.06.2023  Gaina Stefan               Initial version.                                           #
 #   03.06.2023  Gaina Stefan               Updated to support the creation of "apitest" directory.    #
 #   05.06.2023  Gaina Stefan               Fixed rules for linux.                                     #
-#   06.08.2023  Gaina Stefan               Changed library name.                                      #
 # Description: This Makefile is used to generate the API-Test library.                                #
 #######################################################################################################
 
@@ -14,7 +13,7 @@ INCLUDES = -Iinclude/
 
 SOURCES := $(wildcard $(SRC)/*.c)
 OBJECTS := $(patsubst $(SRC)/%.c, $(OBJ)/%.o, $(SOURCES))
-LIBRARY := API-Test.$(LIB_EXTENSION)
+LIBRARY := libapitest.$(LIB_EXTENSION)
 
 all: | create_dirs $(LIBRARY)
 

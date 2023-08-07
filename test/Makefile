@@ -11,7 +11,7 @@
 #######################################################################################################
 
 CFLAGS  = -Wall -Werror
-LDFLAGS = -Wl,-rpath='.' -L../apitest/lib/ -lAPI-Test \
+LDFLAGS = -Wl,-rpath='.' -L../apitest/lib/ -lapitest \
 		  -Wl,-rpath='.' -L../dummy-lib/lib/ -ldummy
 
 INCLUDES = -I../apitest/include/ \
@@ -56,10 +56,10 @@ endif
 ### COPY LIBRARIES ###
 copy_libraries:
 ifeq (Windows_NT, $(OS))
-	copy ..\apitest\lib\API-Test.$(LIB_EXTENSION) bin
-	copy ..\dummy-lib\lib\libdummy.$(LIB_EXTENSION) bin
+	copy ..\apitest\$(LIB)\libapitest.$(LIB_EXTENSION) $(BIN)
+	copy ..\dummy-lib\$(LIB)\libdummy.$(LIB_EXTENSION) $(BIN)
 endif
 ifeq (Linux, $(shell uname))
-	cp ../apitest/lib/API-Test.$(LIB_EXTENSION) bin/
-	cp ../dummy-lib/lib/libdummy.$(LIB_EXTENSION) bin/
+	cp ../apitest/$(LIB)/API-Test.$(LIB_EXTENSION) $(BIN)/
+	cp ../dummy-lib/$(LIB)/libdummy.$(LIB_EXTENSION) $(BIN)/
 endif
