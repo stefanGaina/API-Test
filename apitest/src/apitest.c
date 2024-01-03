@@ -1,4 +1,21 @@
 /******************************************************************************************************
+ * API-Test Copyright (C) 2024                                                                        *
+ *                                                                                                    *
+ * This software is provided 'as-is', without any express or implied warranty. In no event will the   *
+ * authors be held liable for any damages arising from the use of this software.                      *
+ *                                                                                                    *
+ * Permission is granted to anyone to use this software for any purpose, including commercial         *
+ * applications, and to alter it and redistribute it freely, subject to the following restrictions:   *
+ *                                                                                                    *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the   *
+ *    original software. If you use this software in a product, an acknowledgment in the product      *
+ *    documentation would be appreciated but is not required.                                         *
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being *
+ *    the original software.                                                                          *
+ * 3. This notice may not be removed or altered from any source distribution.                         *
+******************************************************************************************************/
+
+/******************************************************************************************************
  * @file apitest.c                                                                                    *
  * @date:      @author:                   Reason for change:                                          *
  * 02.06.2023  Gaina Stefan               Initial version.                                            *
@@ -9,20 +26,16 @@
  * 22.06.2023  Gaina Stefan               Refactored apitest_string_to_integer.                       *
  * 24.06.2023  Gaina Stefan               Fixed compilation error on linux.                           *
  * 06.08.2023  Gaina Stefan               Removed apitest_get_version.                                *
+ * 03.01.2024  Gaina Stefan               Refactored due to the redesign.                             *
  * @details This file implements the interface defined in apitest.h.                                  *
  * @todo While inputing the commands it would be nice to be able to navigate using the key arrows     *
- * through the command history (like in terminal). It works on Windows.                               *
- * @bug When numbers are negative they are capped at -LLONG_MAX instead of LLONG_MIN.                 *
- * apitest_string_to_float needs to be updated to check for limits.                                   *
+ * through the command history (like in terminal).                                                    *
+ * @bug No known bugs.                                                                                *
  *****************************************************************************************************/
 
 /******************************************************************************************************
  * HEADER FILE INCLUDES                                                                               *
  *****************************************************************************************************/
-
-#include <string.h>
-#include <stdlib.h>
-#include <limits.h>
 
 #include "apitest.h"
 
@@ -36,323 +49,155 @@
 #define PRINT_PREFIX "[API-TEST] "
 
 /******************************************************************************************************
+ * TYPE DEFINITIONS                                                                                   *
+ *****************************************************************************************************/
+
+/**
+ * @brief Explicit data type of the handler for internal usage.
+*/
+typedef struct s_apitest_PrivateHandler_t
+{
+	FILE*        file;        /**< The file from which the commands are being taken.        */
+	const gchar* title;       /**< String that will be displayed during from terminal mode. */
+	gchar*       buffer;      /**< The buffer in which the commands are be stored.          */
+	gsize        buffer_size; /**< The size of the allocated buffer.                        */
+}
+apitest_PrivateHandler_t;
+
+/******************************************************************************************************
+ * GLOBAL VARIABLES                                                                                   *
+ *****************************************************************************************************/
+
+/**
+ * @brief The output variable of apitest_get_command(). This is global so that it can be accessed through
+ * macros leading to little code on test application side (this is acceptable because it's not meant to
+ * be used for anything other than testing).
+*/
+apitest_Command_t command = {};
+
+/******************************************************************************************************
  * LOCAL FUNCTIONS                                                                                    *
  *****************************************************************************************************/
 
 /**
  * @brief Created a command object from a string.
- * @param[in] string: The string representing the command.
+ * @param string: The string representing the command.
  * @return The resulted command.
 */
-static apitest_Command_t string_to_command(const char* string);
+static void string_to_command(const gchar* string);
 
 /**
- * @brief Copies a string into another.
- * @param[out] destination: The buffer where the string will be copied.
- * @param[in] source: The string to be copied.
- * @param length: The length of the string copied (or the desired part, this function will add NULL
- * terminator at the end.)
+ * @brief Frees the current arguments and resets the counter.
+ * @param void
  * @return void
 */
-static void string_copy(char* destination, const char* source, uint64_t length);
+static void free_command(void);
 
 /******************************************************************************************************
  * FUNCTION DEFINITIONS                                                                               *
  *****************************************************************************************************/
 
-apitest_Command_t apitest_get_command(const char* title, FILE* file)
+gboolean apitest_init(apitest_Handler_t* const public_handler, const gchar* const title, const gchar* const file_name, const gsize buffer_size)
 {
-	char input_buffer[APITEST_INPUT_BUFFER_SIZE] = "";
+	apitest_PrivateHandler_t* const handler = (apitest_PrivateHandler_t*)public_handler;
 
-READ_COMMAND:
-
-	if (NULL == file || stdin == file)
+	handler->buffer = (gchar*)g_try_malloc(buffer_size);
+	if (NULL == handler->buffer)
 	{
-		file = stdin;
-		if (NULL == title)
-		{
-			title = APITEST_DEFAULT_TITLE_NAME;
-		}
-		(void)fprintf(stdout, "%s", title);
+		(void)g_fprintf(stdout, PRINT_PREFIX "Out of memory!\n");
+		return FALSE;
+	}
+	handler->buffer_size = buffer_size;
+
+	if (NULL == title)
+	{
+		handler->title = APITEST_DEFAULT_TITLE_NAME;
+	}
+	else
+	{
+		handler->title = title;
 	}
 
-	if (NULL == fgets(input_buffer, sizeof(input_buffer), file)
-	 && stdin != file && 0L != feof(file))
+	if (NULL == file_name)
 	{
-		return (apitest_Command_t){ -1L, NULL };
-	}
-	input_buffer[APITEST_INPUT_BUFFER_SIZE - 1] = '\0'; /*< In case the buffer is not large enough. */
-
-	if (0 == apitest_string_compare("\n", input_buffer)
-	 || 0 == apitest_string_compare("\0", input_buffer))
-	{
-		goto READ_COMMAND;
+		handler->file = stdin;
+		return TRUE;
 	}
 
-	if ('\n' == input_buffer[strlen(input_buffer) - 1ULL])
+	handler->file = fopen(file_name, "r");
+	if (NULL == handler->file)
 	{
-		input_buffer[strlen(input_buffer) - 1ULL] = '\0';
+		(void)g_fprintf(stdout, "Failed to open \"%s\" in read mode!\n", file_name);
+		APITEST_INTERNAL_TERMINAL_MODE_PRINT();
+		handler->file = stdin;
 	}
-	(void)fprintf(stdout, "%s\n", input_buffer);
 
-	return string_to_command(input_buffer);
+	return TRUE;
 }
 
-void apitest_free_command(apitest_Command_t* const command)
+void apitest_deinit(apitest_Handler_t* const public_handler)
 {
-	if (NULL == command || 0L >= command->argc)
+	apitest_PrivateHandler_t* const handler = (apitest_PrivateHandler_t*)public_handler;
+
+	free_command();
+	handler->title = NULL;
+
+	if (stdin != handler->file && NULL != handler->file)
 	{
-		return;
+		(void)fclose(handler->file);
+		handler->file = NULL;
 	}
 
-	while (0L < command->argc)
-	{
-		--command->argc;
-		free(command->argv[command->argc]);
-		command->argv[command->argc] = NULL;
-	}
-
-	free(command->argv);
-	command->argv = NULL;
+	g_free(handler->buffer);
+	handler->buffer      = NULL;
+	handler->buffer_size = 0UL;
 }
 
-int16_t apitest_string_compare(const char* string1, const char* string2)
+void apitest_get_command(apitest_Handler_t* const public_handler)
 {
-	static const int16_t EQUAL   = 0;
-	static const int16_t LESSER  = -1;
-	static const int16_t GREATER = 1;
+	apitest_PrivateHandler_t* const handler              = (apitest_PrivateHandler_t*)public_handler;
+	gsize                           last_character_index = 0UL;
 
-	if (NULL == string1 && NULL == string2)
-	{
-		return EQUAL;
-	}
-
-	if (NULL == string1)
-	{
-		return LESSER;
-	}
-
-	if (NULL == string2)
-	{
-		return GREATER;
-	}
-
+	free_command();
 	do
 	{
-		if (*string1 < *string2)
+		(void)g_fprintf(stdout, "\n%s", handler->title);
+		if (NULL == fgets(handler->buffer, handler->buffer_size, handler->file))
 		{
-			return LESSER;
-		}
+			if (stdin != handler->file && 0 != feof(handler->file))
+			{
+				(void)fclose(handler->file);
+				handler->file = stdin;
 
-		if (*string1 > *string2)
-		{
-			return GREATER;
+				APITEST_INTERNAL_TERMINAL_MODE_PRINT();
+				continue;
+			}
+
+			command.argc = -1;
+			return;
 		}
-		++string1;
-		++string2;
 	}
-	while ('\0' != *string1 || '\0' != *string2);
+	while (0 == strcmp("\n", handler->buffer)
+	    || 0 == strcmp("\0", handler->buffer));
 
-	return EQUAL;
+	last_character_index = strlen(handler->buffer) - 1UL;
+	if ('\n' == handler->buffer[last_character_index])
+	{
+		handler->buffer[last_character_index--] = '\0';
+	}
+	if ('\r' == handler->buffer[last_character_index])
+	{
+		handler->buffer[last_character_index] = '\0';
+	}
+
+	(void)g_fprintf(stdout, "%s\n", handler->buffer);
+	string_to_command(handler->buffer);
 }
 
-apitest_Error_t apitest_string_to_integer(const char* string, int64_t* const integer)
+static void string_to_command(const gchar* string)
 {
-	apitest_Error_t error       = E_APITEST_ERROR_NONE;
-	bool            is_negative = false;
-
-	if (NULL == string || '\0' == *string || NULL == integer)
-	{
-		return E_APITEST_ERROR_INVALID_PARAMETER;
-	}
-
-	if ('-' == *string)
-	{
-		is_negative = true;
-		++string;
-	}
-	*integer = 0LL;
-
-	/* base 2 */
-	if ('0' == *string && 'b' == *(string + 1ULL))
-	{
-		string += 2ULL;
-
-		do
-		{
-			if (LLONG_MAX / 2LL < *integer)
-			{
-				error = E_APITEST_ERROR_OUT_OF_RANGE;
-				goto CHECK_SIGN;
-			}
-
-			if ('0' > *string || '1' < *string)
-			{
-				error = E_APITEST_ERROR_INVALID_CHARACTER;
-				goto CHECK_SIGN;
-			}
-
-			*integer = *integer * 2LL + (*string - '0');
-		}
-		while ('\0' != *++string);
-
-		goto CHECK_SIGN;
-	}
-
-	/* base 16 */
-	if ('0' == *string && 'x' == *(string + 1ULL))
-	{
-		string += 2ULL;
-
-		do
-		{
-			if (LLONG_MAX / 16LL < *integer)
-			{
-				error = E_APITEST_ERROR_OUT_OF_RANGE;
-				goto CHECK_SIGN;
-			}
-
-			if ('0' <= *string && '9' >= *string)
-			{
-				*integer = *integer * 16LL + (*string - '0');
-			}
-			else if ('A' <= *string && 'F' >= *string)
-			{
-				*integer = *integer * 16LL + (*string - '7');
-			}
-			else
-			{
-				error = E_APITEST_ERROR_INVALID_CHARACTER;
-				goto CHECK_SIGN;
-			}
-		}
-		while ('\0' != *++string);
-
-		goto CHECK_SIGN;
-	}
-
-	/* base 8 */
-	if ('0' == *string && '\0' != *(string + 1ULL))
-	{
-		++string;
-
-		do
-		{
-			if (LLONG_MAX / 8LL < *integer)
-			{
-				error = E_APITEST_ERROR_OUT_OF_RANGE;
-				goto CHECK_SIGN;
-			}
-
-			if ('0' > *string || '7' < *string)
-			{
-				error = E_APITEST_ERROR_INVALID_CHARACTER;
-				goto CHECK_SIGN;
-			}
-
-			*integer = *integer * 8LL + (*string - '0');
-		}
-		while ('\0' != *++string);
-
-		goto CHECK_SIGN;
-	}
-
-	/* base 10 */
-	do
-	{
-		if ( LLONG_MAX / 10LL < *integer
-		 || (LLONG_MAX / 10LL == *integer && '7' < *string))
-		{
-			error = E_APITEST_ERROR_OUT_OF_RANGE;
-			goto CHECK_SIGN;
-		}
-
-		if ('0' > *string || '9' < *string)
-		{
-			error = E_APITEST_ERROR_INVALID_CHARACTER;
-			goto CHECK_SIGN;
-		}
-
-		*integer = *integer * 10LL + (*string - '0');
-	}
-	while ('\0' != *++string);
-
-CHECK_SIGN:
-
-	if (true == is_negative)
-	{
-		*integer *= -1;
-	}
-
-	return error;
-}
-
-apitest_Error_t apitest_string_to_float(const char* string, double* const floating_number)
-{
-	apitest_Error_t error         = E_APITEST_ERROR_NONE;
-	bool            is_negative   = false;
-	double          fraction_part = 0.0;
-
-	if (NULL == string || '\0' == *string || NULL == floating_number)
-	{
-		return E_APITEST_ERROR_INVALID_PARAMETER;
-	}
-
-	if ('-' == *string)
-	{
-		is_negative = true;
-		++string;
-	}
-
-	/* whole part */
-	do
-	{
-		if ('0' > *string || '9' < *string)
-		{
-			error = E_APITEST_ERROR_INVALID_CHARACTER;
-			goto CHECK_SIGN;
-		}
-		*floating_number = *floating_number * 10.0 + (*string - '0');
-
-		if ('\0' == *++string)
-		{
-			goto CHECK_SIGN;
-		}
-	}
-	while ('.' != *string);
-
-	/* fraction part */
-	while ('\0' != *++string)
-	{
-		if ('0' > *string || '9' < *string)
-		{
-			error = E_APITEST_ERROR_INVALID_CHARACTER;
-			goto CHECK_SIGN;
-		}
-		fraction_part = fraction_part * 10.0 + (*string - '0');
-	}
-
-	while (1.0 <= fraction_part)
-	{
-		fraction_part /= 10.0;
-	}
-	*floating_number += fraction_part;
-
-CHECK_SIGN:
-
-	if (true == is_negative)
-	{
-		*floating_number *= -1.0;
-	}
-
-	return error;
-}
-
-static apitest_Command_t string_to_command(const char* string)
-{
-	apitest_Command_t command         = { 0 };
-	char**            argv_extended   = NULL;
-	size_t            argument_length = 0ULL;
+	gchar** argv_extended   = NULL;
+	gsize   argument_length = 0UL;
 
 	while ('\0' != *string)
 	{
@@ -366,7 +211,7 @@ static apitest_Command_t string_to_command(const char* string)
 			break;
 		}
 
-		argument_length = 0ULL;
+		argument_length = 0UL;
 		if ('\"' == *string)
 		{
 			++string;
@@ -374,8 +219,8 @@ static apitest_Command_t string_to_command(const char* string)
 			{
 				if ('\0' == *(string + argument_length))
 				{
-					(void)fprintf(stdout, "\" was not closed!\n");
-					return command;
+					(void)g_fprintf(stdout, "\" was not closed!\n");
+					return;
 				}
 				++argument_length;
 			}
@@ -388,21 +233,21 @@ static apitest_Command_t string_to_command(const char* string)
 			}
 		}
 
-		argv_extended = (char**)realloc(command.argv, ++command.argc * sizeof(char*));
+		argv_extended = (gchar**)g_try_realloc(command.argv, ++command.argc * sizeof(gchar*));
 		if (NULL == argv_extended)
 		{
-			(void)fprintf(stdout, PRINT_PREFIX "Out of memory!\n");
+			(void)g_fprintf(stdout, PRINT_PREFIX "Out of memory!\n");
 			break;
 		}
 		command.argv = argv_extended;
 
-		command.argv[command.argc - 1UL] = (char*)malloc(argument_length + 1ULL);
-		if (NULL == command.argv[command.argc - 1UL])
+		command.argv[command.argc - 1] = (gchar*)g_try_malloc(++argument_length);
+		if (NULL == command.argv[command.argc - 1])
 		{
-			(void)fprintf(stdout, PRINT_PREFIX "Out of memory!\n");
+			(void)g_fprintf(stdout, PRINT_PREFIX "Out of memory!\n");
 			break;
 		}
-		string_copy(command.argv[command.argc - 1UL], string, argument_length);
+		(void)g_strlcpy(command.argv[command.argc - 1], string, argument_length);
 		string += argument_length;
 
 		if ('\"' == *(string))
@@ -410,17 +255,21 @@ static apitest_Command_t string_to_command(const char* string)
 			++string;
 		}
 	}
-
-	return command;
 }
 
-static void string_copy(char* const destination, const char* const source, const size_t length)
+static void free_command(void)
 {
-	size_t index = 0ULL;
-
-	for (; index < length; ++index)
+	if (0 >= command.argc)
 	{
-		destination[index] = source[index];
+		return;
 	}
-	destination[index] = '\0';
+
+	while (0 < command.argc)
+	{
+		g_free(command.argv[--command.argc]);
+		command.argv[command.argc] = NULL;
+	}
+
+	g_free(command.argv);
+	command.argv = NULL;
 }

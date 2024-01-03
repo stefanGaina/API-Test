@@ -1,4 +1,21 @@
 /******************************************************************************************************
+ * API-Test Copyright (C) 2024                                                                        *
+ *                                                                                                    *
+ * This software is provided 'as-is', without any express or implied warranty. In no event will the   *
+ * authors be held liable for any damages arising from the use of this software.                      *
+ *                                                                                                    *
+ * Permission is granted to anyone to use this software for any purpose, including commercial         *
+ * applications, and to alter it and redistribute it freely, subject to the following restrictions:   *
+ *                                                                                                    *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the   *
+ *    original software. If you use this software in a product, an acknowledgment in the product      *
+ *    documentation would be appreciated but is not required.                                         *
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being *
+ *    the original software.                                                                          *
+ * 3. This notice may not be removed or altered from any source distribution.                         *
+******************************************************************************************************/
+
+/******************************************************************************************************
  * @file dummy_library.c                                                                              *
  * @date:      @author:                   Reason for change:                                          *
  * 02.06.2023  Gaina Stefan               Initial version.                                            *
@@ -6,6 +23,7 @@
  * 03.06.2023  Gaina Stefan               Added implementation for dummy_floor_round.                 *
  * 05.06.2023  Gaina Stefan               Fixed compilatioon error without stdder.h on linux.         *
  * 22.06.2023  Gaina Stefan               Fixed dummy_digits_count counting 9 twice.                  *
+ * 03.01.2024  Gaina Stefan               Added Glib.                                                 *
  * @details This file implements the interface defined in dummy_library.h.                            *
  * @todo N/A.                                                                                         *
  * @bug No known bugs.                                                                                *
@@ -15,35 +33,33 @@
  * HEADER FILE INCLUDES                                                                               *
  *****************************************************************************************************/
 
-#include <stddef.h>
-
 #include "dummy_library.h"
 
 /******************************************************************************************************
  * FUNCTION DEFINITIONS                                                                               *
  *****************************************************************************************************/
 
-uint16_t dummy_digits_count(int64_t integer)
+guint16 dummy_digits_count(gint64 integer)
 {
-	uint16_t digits_count = 1U;
+	guint16 digits_count = 1U;
 
-	if (0LL > integer)
+	if (0L > integer)
 	{
 		integer *= -1L;
 	}
 
-	while (9LL < integer)
+	while (9L < integer)
 	{
-		integer /= 10;
+		integer /= 10L;
 		++digits_count;
 	}
 
 	return digits_count;
 }
 
-uint64_t dummy_string_length(const char* string)
+guint64 dummy_string_length(const gchar* string)
 {
-	uint64_t string_length = 0ULL;
+	guint64 string_length = 0UL;
 
 	if (NULL == string)
 	{
@@ -58,8 +74,8 @@ uint64_t dummy_string_length(const char* string)
 	return string_length;
 }
 
-double dummy_floor_round(double point_number)
+gdouble dummy_floor_round(const gdouble point_number)
 {
-	int64_t floor = (int64_t)point_number;
-	return (double)floor;
+	gint64 floor = (gint64)point_number;
+	return (gdouble)floor;
 }

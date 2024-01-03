@@ -1,4 +1,5 @@
 #######################################################################################################
+# Copyright (C) API-Test 2024                                                                         #
 # Module history:                                                                                     #
 #   Date:       Author:                    Reason:                                                    #
 #   02.06.2023  Gaina Stefan               Initial version.                                           #
@@ -7,10 +8,9 @@
 #   11.06.2023  Gaina Stefan               Updated ut-clean rule.                                     #
 #   22.06.2023  Gaina Stefan               Fix ut-clean rule on linux.                                #
 #   06.08.2023  Gaina Stefan               Added apitest_version to info files.                       #
+#   03.01.2024  Gaina Stefan               Added dogygen.                                             #
 # Description: This Makefile is used to invoke the Makefiles in the subdirectories.                   #
 #######################################################################################################
-
-export CC = gcc
 
 export SRC := src
 export OBJ := obj
@@ -27,55 +27,33 @@ INFO_FILES = $(COVERAGE_REPORT)/apitest.info         \
 			 $(COVERAGE_REPORT)/dummy_library.info
 
 ### MAKE SUBDIRECTORIES ###
-all: detect_os
+all: build doxygen
+	$(MAKE) -C apitest
+	$(MAKE) -C dummy-lib
+	$(MAKE) -C test
+
+build:
 	$(MAKE) -C apitest
 	$(MAKE) -C dummy-lib
 	$(MAKE) -C test
 
 ### CLEAN SUBDIRECTORIES ###
-clean: detect_os
+clean:
 	$(MAKE) clean -C apitest
 	$(MAKE) clean -C dummy-lib
 	$(MAKE) clean -C test
 
 ### MAKE UNIT-TESTS ###
-ut: detect_os create_dir
+ut:
+	mkdir -p $(COVERAGE_REPORT)
 	$(MAKE) -C unit-tests
 	$(MAKE) run_tests -C unit-tests
 	perl $(GENHTML) $(INFO_FILES) $(GENHTML_FLAGS)
 
-### CREATE DIRECTORY ###
-create_dir:
-ifeq (Windows_NT, $(OS))
-	if not exist "$(COVERAGE_REPORT)" mkdir $(COVERAGE_REPORT)
-endif
-ifeq (Linux, $(shell uname))
-	mkdir -p $(COVERAGE_REPORT)
-endif
-
 ### CLEAN UNIT-TESTS ###
-ut-clean: detect_os
-ifeq (Windows_NT, $(OS))
-	$(RM) $(COVERAGE_REPORT)\*
-	$(RM) $(COVERAGE_REPORT)\apitest\src\*
-	$(RM) $(COVERAGE_REPORT)\dummy-lib\src\*
-	rd /s /q $(COVERAGE_REPORT)\apitest
-	rd /s /q $(COVERAGE_REPORT)\dummy-lib
-endif
-ifeq (Linux, $(shell uname))
-	$(RM) $(COVERAGE_REPORT)/*
-endif
+ut-clean:
+	rm -rf $(COVERAGE_REPORT)/*
 
-### DETECT OPERATING SYSTEM ###
-detect_os:
-ifeq (Windows_NT, $(OS))
-export OS_DIR := windows
-export LIB_EXTENSION := dll
-export RM := del /f /q
-else ifeq (Linux, $(shell uname))
-export OS_DIR := linux
-export LIB_EXTENSION := so
-export RM := rm -rf
-else
-$(error Platform is not supported)
-endif
+### MAKE DOXYGEN ###
+doxygen:
+	doxygen docs/doxygen.conf

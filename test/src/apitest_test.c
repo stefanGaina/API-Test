@@ -1,4 +1,21 @@
 /******************************************************************************************************
+ * API-Test Copyright (C) 2024                                                                        *
+ *                                                                                                    *
+ * This software is provided 'as-is', without any express or implied warranty. In no event will the   *
+ * authors be held liable for any damages arising from the use of this software.                      *
+ *                                                                                                    *
+ * Permission is granted to anyone to use this software for any purpose, including commercial         *
+ * applications, and to alter it and redistribute it freely, subject to the following restrictions:   *
+ *                                                                                                    *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the   *
+ *    original software. If you use this software in a product, an acknowledgment in the product      *
+ *    documentation would be appreciated but is not required.                                         *
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being *
+ *    the original software.                                                                          *
+ * 3. This notice may not be removed or altered from any source distribution.                         *
+******************************************************************************************************/
+
+/******************************************************************************************************
  * @file apitest_test.c                                                                               *
  * @date:      @author:                   Reason for change:                                          *
  * 02.06.2023  Gaina Stefan               Initial version.                                            *
@@ -8,6 +25,7 @@
  * 11.06.2023  Gaina Stefan               Implemented print_usage and print_help.                     *
  * 22.06.2023  Gaina Stefan               Added print_version and refactored with handle_commands.    *
  * 06.08.2023  Gaina Stefan               Added patch version check.                                  *
+ * 03.01.2024  Gaina Stefan               Refactored using the new interface.                         *
  * @details This file is an example of a testing application based on API-Test.                       *
  * @todo N/A.                                                                                         *
  * @bug No known bugs.                                                                                *
@@ -20,7 +38,6 @@
 #include <stdlib.h>
 
 #include "apitest.h"
-#include "apitest_version.h"
 #include "dummy_library.h"
 
 /******************************************************************************************************
@@ -28,25 +45,11 @@
  *****************************************************************************************************/
 
 /**
- * @brief Handles the commands and calls the functions from dummy library's API.
- * @param input_file: The file where the command will be inputed from.
- * @return void
-*/
-static void handle_commands(FILE* input_file);
-
-/**
- * @brief Prints the version of API-Test in use.
+ * @brief Handles the commands when they are available.
  * @param void
- * @return void
-*/
-static void print_version(void);
-
-/**
- * @brief Prints the usage of the application to the user.
  * @param void
- * @return void
 */
-static void print_usage(void);
+static void test_main(void);
 
 /**
  * @brief Prints the help menu to the user.
@@ -55,231 +58,72 @@ static void print_usage(void);
 */
 static void print_help(void);
 
+/**
+ * @brief Function that will be called when dummy_digits_count is requested by the user.
+ * @param void
+ * @return void
+*/
+static void dummy_digits_count_test(void);
+
+/**
+ * @brief Function that will be called when dummy_string_length is requested by the user.
+ * @param void
+ * @return void
+*/
+static void dummy_string_length_test(void);
+
+/**
+ * @brief Function that will be called when dummy_floor_round is requested by the user.
+ * @param void
+ * @return void
+*/
+static void dummy_floor_round_test(void);
+
 /******************************************************************************************************
  * FUNCTION DEFINITIONS                                                                               *
  *****************************************************************************************************/
 
-int main(int argc, char* argv[])
+APITEST_MAIN(NULL, 1024UL, test_main, print_help)
+
+static void test_main(void)
 {
-	FILE* input_file = NULL;
-
-	print_version();
-
-	if (1L >= argc)
-	{
-		(void)fprintf(stdout, "Running in terminal mode!\n");
-		print_usage();
-	}
-	else if (2L <= argc)
-	{
-		input_file = fopen(argv[1], "r");
-		if (NULL == input_file)
-		{
-			(void)fprintf(stdout, "Failed to open \"%s\"!\n", argv[1]);
-			(void)fprintf(stdout, "Running in terminal mode!\n\n");
-		}
-	}
-
-	if (3L <= argc)
-	{
-		(void)fprintf(stdout, "Extra parameters will be ignored!\n");
-		print_usage();
-	}
-
-	handle_commands(input_file);
-
-	(void)fprintf(stdout, "Process exited successfully!\n");
-
-	return EXIT_SUCCESS;
-}
-
-static void handle_commands(FILE* input_file)
-{
-	apitest_Command_t command                = { .argc = 0L, .argv = NULL };
-	apitest_Error_t   error                  = E_APITEST_ERROR_NONE;
-	int64_t           digits_count_parameter = 0LL;
-	uint16_t          digits_count_ret       = 0U;
-	uint64_t          string_length_ret      = 0ULL;
-	double            floor_round            = 0.0;
-
-	while (true)
-	{
-		command = apitest_get_command("apitest-test> ", input_file);
-
-		if (0L >= command.argc)
-		{
-			(void)fprintf(stdout, "Switching to terminal mode! (EOF reached)\n");
-			input_file = NULL;
-			continue;
-		}
-
-		/* Sanity checks for debugging purposes. */
-		if (NULL == command.argv)
-		{
-			(void)fprintf(stdout, "Invalid command received! (argv is NULL)\n");
-			continue;
-		}
-
-		if (NULL == command.argv[0])
-		{
-			(void)fprintf(stdout, "Invalid command received! (argv[0] is NULL)\n");
-			continue;
-		}
-
-		if (0 == apitest_string_compare("quit", command.argv[0])
-		 || 0 == apitest_string_compare("q"   , command.argv[0]))
-		{
-			apitest_free_command(&command);
-			break;
-		}
-
-		if (0 == apitest_string_compare("help", command.argv[0])
-		 || 0 == apitest_string_compare("h"   , command.argv[0]))
-		{
-			print_help();
-			goto FREE_COMMAND;
-		}
-
-		if (0 == apitest_string_compare("dummy_digits_count", command.argv[0]))
-		{
-			if (1L == command.argc)
-			{
-				(void)fprintf(stdout, "Not enough parameters!\n");
-				goto FREE_COMMAND;
-			}
-
-			if (2L < command.argc)
-			{
-				(void)fprintf(stdout, "Extra parameters will be ignored!\n");
-			}
-
-			error = apitest_string_to_integer(command.argv[1], &digits_count_parameter);
-			switch (error)
-			{
-				case E_APITEST_ERROR_NONE:
-				{
-					digits_count_ret = dummy_digits_count(digits_count_parameter);
-					(void)fprintf(stdout, "dummy_digits_count = %" PRIu16 "\n", digits_count_ret);
-					break;
-				}
-				case E_APITEST_ERROR_INVALID_CHARACTER:
-				{
-					(void)fprintf(stdout, "The parameter format is wrong!\n");
-					break;
-				}
-				case E_APITEST_ERROR_OUT_OF_RANGE:
-				{
-					(void)fprintf(stdout, "The parameter is out of range!\n");
-					break;
-				}
-				case E_APITEST_ERROR_INVALID_PARAMETER: /*< Missed break; on purpose. */
-				default:
-				{
-					(void)fprintf(stdout, "Internal error! (error code: %" PRId32 ")\n", error);
-					break;
-				}
-			}
-			goto FREE_COMMAND;
-		}
-
-		if (0 == apitest_string_compare("dummy_string_length", command.argv[0]))
-		{
-			if (1L == command.argc)
-			{
-				(void)fprintf(stdout, "Not enough parameters!\n");
-				goto FREE_COMMAND;
-			}
-
-			if (2L < command.argc)
-			{
-				(void)fprintf(stdout, "Extra parameters will be ignored!\n");
-			}
-
-			if (0 == apitest_string_compare("NULL", command.argv[1]))
-			{
-				string_length_ret = dummy_string_length(NULL);
-			}
-			else
-			{
-				string_length_ret = dummy_string_length(command.argv[1]);
-			}
-			(void)fprintf(stdout, "dummy_string_length = %" PRIu64 "\n", string_length_ret);
-
-			goto FREE_COMMAND;
-		}
-
-		if (0 == apitest_string_compare("dummy_floor_round", command.argv[0]))
-		{
-			if (1L == command.argc)
-			{
-				(void)fprintf(stdout, "Not enough parameters!\n");
-				goto FREE_COMMAND;
-			}
-
-			if (2L < command.argc)
-			{
-				(void)fprintf(stdout, "Extra parameters will be ignored!\n");
-			}
-
-			error = apitest_string_to_float(command.argv[1], &floor_round);
-			switch (error)
-			{
-				case E_APITEST_ERROR_NONE:
-				{
-						floor_round = dummy_floor_round(floor_round);
-						(void)fprintf(stdout, "dummy_floor_round = %lf\n", floor_round);
-					break;
-				}
-				case E_APITEST_ERROR_INVALID_CHARACTER:
-				{
-					(void)fprintf(stdout, "The parameter format is wrong!\n");
-					break;
-				}
-				case E_APITEST_ERROR_OUT_OF_RANGE:
-				{
-					(void)fprintf(stdout, "The parameter is out of range!\n");
-					break;
-				}
-				case E_APITEST_ERROR_INVALID_PARAMETER: /*< Missed break; on purpose. */
-				default:
-				{
-					(void)fprintf(stdout, "Internal error! (error code: %" PRId32 ")\n", error);
-					break;
-				}
-			}
-			goto FREE_COMMAND;
-		}
-
-		(void)fprintf(stdout, "Command is not valid! (press h for help)\n");
-
-FREE_COMMAND:
-
-		(void)fprintf(stdout, "\n");
-		apitest_free_command(&command);
-	}
-}
-
-static void print_version(void)
-{
-	apitest_Version_t version = apitest_get_version();
-
-	(void)fprintf(stdout, "Using API-Test %" PRIu8 ".%" PRIu8 ".%" PRIu8 "\n", version.major, version.minor, version.patch);
-	if (APITEST_VERSION_MAJOR != version.major
-	 || APITEST_VERSION_MINOR != version.minor
-	 || APITEST_VERSION_PATCH != version.patch)
-	{
-		(void)fprintf(stdout, "Version mismatch! (compiled version: %" PRIu8 ".%" PRIu8 ".%" PRIu8 ")\n", APITEST_VERSION_MAJOR, APITEST_VERSION_MINOR, APITEST_VERSION_PATCH);
-	}
-}
-
-static void print_usage(void)
-{
-	(void)fprintf(stdout, "Usage: <executable_name> <path_to_input_file> (optional)\n\n");
+	APITEST_HANDLE_COMMAND(dummy_digits_count, 1U);
+	APITEST_HANDLE_COMMAND(dummy_string_length, 1U);
+	APITEST_HANDLE_COMMAND(dummy_floor_round, 1U);
+	(void)g_fprintf(stdout, "Invalid function name! Type \"h\" or \"help\" for a list of supported commands!\n");
 }
 
 static void print_help(void)
 {
-	(void)fprintf(stdout, "dummy_digits_count  <integer>\n");
-	(void)fprintf(stdout, "dummy_string_length <string>\n");
-	(void)fprintf(stdout, "dummy_floor_round   <number>\n");
+	(void)g_fprintf(stdout, "dummy_digits_count  <integer>\n");
+	(void)g_fprintf(stdout, "dummy_string_length <string>\n");
+	(void)g_fprintf(stdout, "dummy_floor_round   <number>\n");
+}
+
+static void dummy_digits_count_test(void)
+{
+	gint64 input = 0L;
+
+	APITEST_STRING_TO_INT64(1, input);
+	(void)g_fprintf(stdout, "The number has %" PRIu8 " digits!\n", dummy_digits_count(input));
+}
+
+static void dummy_string_length_test(void)
+{
+	const gchar* input = command.argv[1];
+
+	if (0 == strcmp("NULL", command.argv[1]))
+	{
+		input = NULL;
+	}
+
+	(void)g_fprintf(stdout, "The string's length is %" G_GUINT64_FORMAT "!\n", dummy_string_length(input));
+}
+
+static void dummy_floor_round_test(void)
+{
+	gdouble input = 0.0;
+
+	APITEST_STRING_TO_DOUBLE(1, input);
+	(void)g_fprintf(stdout, "The floor rounded number is %lf!\n", dummy_floor_round(input));
 }
