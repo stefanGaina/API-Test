@@ -12,7 +12,7 @@
 CFLAGS = `pkg-config --cflags glib-2.0` -Wall -Werror -fPIC
 LDFLAGS = `pkg-config --libs glib-2.0`
 
-INCLUDES = -Iinclude/
+INCLUDES = -Iinclude
 
 SOURCES := $(wildcard $(SRC)/*.c)
 OBJECTS := $(patsubst $(SRC)/%.c, $(OBJ)/%.o, $(SOURCES))

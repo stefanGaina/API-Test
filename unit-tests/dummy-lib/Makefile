@@ -6,21 +6,15 @@
 # Description: This Makefile is used to invoke the Makefiles in the subdirectories.                   #
 #######################################################################################################
 
-export TESTED_FILE_DIR := ../../../apitest/$(SRC)
+export TESTED_FILE_DIR := ../../../dummy-lib/$(SRC)
 
 all:
-	$(MAKE) -C apitest
-	$(MAKE) -C apitest_internal
-	$(MAKE) -C apitest_version
+	$(MAKE) -C dummy_library
 
 ### RUN TESTS ###
 run_tests:
-	$(MAKE) run_tests -C apitest
-	$(MAKE) run_tests -C apitest_internal
-	$(MAKE) run_tests -C apitest_version
+	$(MAKE) run_tests -C dummy_library
 
 ### CLEAN ###
 clean:
-	$(MAKE) clean -C apitest
-	$(MAKE) clean -C apitest_internal
-	$(MAKE) clean -C apitest_version
+	$(MAKE) clean -C dummy_library

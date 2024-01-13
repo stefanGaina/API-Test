@@ -9,6 +9,7 @@
 #   22.06.2023  Gaina Stefan               Fix ut-clean rule on linux.                                #
 #   06.08.2023  Gaina Stefan               Added apitest_version to info files.                       #
 #   03.01.2024  Gaina Stefan               Added dogygen.                                             #
+#   13.01.2024  Gaina Stefan               Added info files.                                          #
 # Description: This Makefile is used to invoke the Makefiles in the subdirectories.                   #
 #######################################################################################################
 
@@ -22,15 +23,13 @@ export COVERAGE_REPORT := coverage_report
 GENHTML       = vendor/lcov/genhtml.perl
 GENHTML_FLAGS = --branch-coverage --num-spaces=4 --output-directory coverage_report/
 
-INFO_FILES = $(COVERAGE_REPORT)/apitest.info         \
-			 $(COVERAGE_REPORT)/apitest_version.info \
+INFO_FILES = $(COVERAGE_REPORT)/apitest_internal.info \
+			 $(COVERAGE_REPORT)/apitest_version.info  \
+			 $(COVERAGE_REPORT)/apitest.info          \
 			 $(COVERAGE_REPORT)/dummy_library.info
 
 ### MAKE SUBDIRECTORIES ###
 all: build doxygen
-	$(MAKE) -C apitest
-	$(MAKE) -C dummy-lib
-	$(MAKE) -C test
 
 build:
 	$(MAKE) -C apitest
@@ -44,15 +43,15 @@ clean:
 	$(MAKE) clean -C test
 
 ### MAKE UNIT-TESTS ###
-ut:
+ut: ut-clean
 	mkdir -p $(COVERAGE_REPORT)
 	$(MAKE) -C unit-tests
-	$(MAKE) run_tests -C unit-tests
 	perl $(GENHTML) $(INFO_FILES) $(GENHTML_FLAGS)
 
 ### CLEAN UNIT-TESTS ###
 ut-clean:
 	rm -rf $(COVERAGE_REPORT)/*
+	$(MAKE) clean -C unit-tests
 
 ### MAKE DOXYGEN ###
 doxygen:

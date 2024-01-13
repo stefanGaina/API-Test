@@ -17,8 +17,8 @@ LDFLAGS = `pkg-config --libs glib-2.0`                                          
 		  -Wl,-Bdynamic,-rpath,'$$ORIGIN'/../../apitest/$(LIB) -L../apitest/$(LIB)/ -lapitest \
 		  -Wl,-Bdynamic,-rpath,'$$ORIGIN'/../../dummy-lib/$(LIB) -L../dummy-lib/$(LIB)/ -ldummy
 
-INCLUDES = -I../apitest/include/ \
-		   -I../dummy-lib/include/
+INCLUDES = -I../apitest/include \
+		   -I../dummy-lib/include
 
 SOURCES    := $(wildcard $(SRC)/*.c)
 OBJECTS    := $(patsubst $(SRC)/%.c, $(OBJ)/%.o, $(SOURCES))

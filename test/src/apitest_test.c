@@ -87,9 +87,9 @@ APITEST_MAIN(NULL, 1024UL, test_main, print_help)
 
 static void test_main(void)
 {
-	APITEST_HANDLE_COMMAND(dummy_digits_count, 1U);
+	APITEST_HANDLE_COMMAND(dummy_digits_count , 1U);
 	APITEST_HANDLE_COMMAND(dummy_string_length, 1U);
-	APITEST_HANDLE_COMMAND(dummy_floor_round, 1U);
+	APITEST_HANDLE_COMMAND(dummy_floor_round  , 1U);
 	(void)g_fprintf(stdout, "Invalid function name! Type \"h\" or \"help\" for a list of supported commands!\n");
 }
 
@@ -110,12 +110,7 @@ static void dummy_digits_count_test(void)
 
 static void dummy_string_length_test(void)
 {
-	const gchar* input = command.argv[1];
-
-	if (0 == strcmp("NULL", command.argv[1]))
-	{
-		input = NULL;
-	}
+	const gchar* const input = 0 == strcmp("NULL", command.argv[1]) ? NULL : command.argv[1];
 
 	(void)g_fprintf(stdout, "The string's length is %" G_GUINT64_FORMAT "!\n", dummy_string_length(input));
 }
