@@ -92,63 +92,64 @@ $(function() {
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment"> * 06.08.2023  Gaina Stefan               Initial version.                                            *</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment"> * 07.08.2023  Gaina Stefan               Added cast to macros.                                       *</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"> * 03.01.2024  Gaina Stefan               Changed version to 2.0.0.                                   *</span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment"> * @details This file defines the type definition for version structure and defines a getter.         *</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment"> * @todo N/A.                                                                                         *</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"> * @bug No known bugs.                                                                                *</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment"> *****************************************************************************************************/</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#ifndef APITEST_VERSION_H_</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#define APITEST_VERSION_H_</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">/******************************************************************************************************</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment"> * HEADER FILE INCLUDES                                                                               *</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment"> *****************************************************************************************************/</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#include &lt;glib.h&gt;</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment">/******************************************************************************************************</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment"> * MACROS                                                                                             *</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment"> *****************************************************************************************************/</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
-<div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="apitest__version_8h.html#ac39229e1648df2718895dfd6bebddc1c">   45</a></span>&#160;<span class="preprocessor">#define APITEST_VERSION_MAJOR (guint8)2U</span></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
-<div class="line"><a name="l00050"></a><span class="lineno"><a class="line" href="apitest__version_8h.html#a1894f6770ed3184dc8187c4c4b94ad7c">   50</a></span>&#160;<span class="preprocessor">#define APITEST_VERSION_MINOR (guint8)0U</span></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
-<div class="line"><a name="l00055"></a><span class="lineno"><a class="line" href="apitest__version_8h.html#acf9e95920bc40338028f95f11b3441c3">   55</a></span>&#160;<span class="preprocessor">#define APITEST_VERSION_PATCH (guint8)0U</span></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="comment">/******************************************************************************************************</span></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="comment"> * TYPE DEFINITIONS                                                                                   *</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="comment"> *****************************************************************************************************/</span></div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
-<div class="line"><a name="l00064"></a><span class="lineno"><a class="line" href="structs__apitest__Version__t.html">   64</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="structs__apitest__Version__t.html">s_apitest_Version_t</a></div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;{</div>
-<div class="line"><a name="l00066"></a><span class="lineno"><a class="line" href="structs__apitest__Version__t.html#a7cfcf375669039080bd8efa23f0da457">   66</a></span>&#160;    guint8 <a class="code" href="structs__apitest__Version__t.html#a7cfcf375669039080bd8efa23f0da457">major</a>; </div>
-<div class="line"><a name="l00067"></a><span class="lineno"><a class="line" href="structs__apitest__Version__t.html#aa02e97baccfb9404510c067a11bc46d2">   67</a></span>&#160;    guint8 <a class="code" href="structs__apitest__Version__t.html#aa02e97baccfb9404510c067a11bc46d2">minor</a>; </div>
-<div class="line"><a name="l00068"></a><span class="lineno"><a class="line" href="structs__apitest__Version__t.html#afb7e8ac46610734e8d75ed34d6a4846c">   68</a></span>&#160;    guint8 <a class="code" href="structs__apitest__Version__t.html#afb7e8ac46610734e8d75ed34d6a4846c">patch</a>; </div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;}</div>
-<div class="line"><a name="l00070"></a><span class="lineno"><a class="line" href="apitest__version_8h.html#a218d195e99d05e20bd23834a506b586c">   70</a></span>&#160;<a class="code" href="apitest__version_8h.html#a218d195e99d05e20bd23834a506b586c">apitest_Version_t</a>;</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="comment">/******************************************************************************************************</span></div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="comment"> * FUNCTION PROTOTYPES                                                                                *</span></div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="comment"> *****************************************************************************************************/</span></div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160; </div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> {</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="keyword">extern</span> <a class="code" href="structs__apitest__Version__t.html">apitest_Version_t</a> <a class="code" href="apitest__version_8h.html#a3ed4eb763dc2be14db1b34f1cede355b">apitest_get_version</a>(<span class="keywordtype">void</span>);</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160; </div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;}</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160; </div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/*&lt; APITEST_VERSION_H_ */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment"> * 14.01.2024  Gaina Stefan               Changed version to 2.0.1.                                   *</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment"> * @details This file defines the type definition for version structure and defines a getter.         *</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"> * @todo N/A.                                                                                         *</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment"> * @bug No known bugs.                                                                                *</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment"> *****************************************************************************************************/</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#ifndef APITEST_VERSION_H_</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#define APITEST_VERSION_H_</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">/******************************************************************************************************</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment"> * HEADER FILE INCLUDES                                                                               *</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment"> *****************************************************************************************************/</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#include &lt;glib.h&gt;</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment">/******************************************************************************************************</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment"> * MACROS                                                                                             *</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment"> *****************************************************************************************************/</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
+<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="apitest__version_8h.html#ac39229e1648df2718895dfd6bebddc1c">   46</a></span>&#160;<span class="preprocessor">#define APITEST_VERSION_MAJOR (guint8)2U</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
+<div class="line"><a name="l00051"></a><span class="lineno"><a class="line" href="apitest__version_8h.html#a1894f6770ed3184dc8187c4c4b94ad7c">   51</a></span>&#160;<span class="preprocessor">#define APITEST_VERSION_MINOR (guint8)0U</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
+<div class="line"><a name="l00056"></a><span class="lineno"><a class="line" href="apitest__version_8h.html#acf9e95920bc40338028f95f11b3441c3">   56</a></span>&#160;<span class="preprocessor">#define APITEST_VERSION_PATCH (guint8)1U</span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="comment">/******************************************************************************************************</span></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="comment"> * TYPE DEFINITIONS                                                                                   *</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="comment"> *****************************************************************************************************/</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
+<div class="line"><a name="l00065"></a><span class="lineno"><a class="line" href="structs__apitest__Version__t.html">   65</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="structs__apitest__Version__t.html">s_apitest_Version_t</a></div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;{</div>
+<div class="line"><a name="l00067"></a><span class="lineno"><a class="line" href="structs__apitest__Version__t.html#a7cfcf375669039080bd8efa23f0da457">   67</a></span>&#160;    guint8 <a class="code" href="structs__apitest__Version__t.html#a7cfcf375669039080bd8efa23f0da457">major</a>; </div>
+<div class="line"><a name="l00068"></a><span class="lineno"><a class="line" href="structs__apitest__Version__t.html#aa02e97baccfb9404510c067a11bc46d2">   68</a></span>&#160;    guint8 <a class="code" href="structs__apitest__Version__t.html#aa02e97baccfb9404510c067a11bc46d2">minor</a>; </div>
+<div class="line"><a name="l00069"></a><span class="lineno"><a class="line" href="structs__apitest__Version__t.html#afb7e8ac46610734e8d75ed34d6a4846c">   69</a></span>&#160;    guint8 <a class="code" href="structs__apitest__Version__t.html#afb7e8ac46610734e8d75ed34d6a4846c">patch</a>; </div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;}</div>
+<div class="line"><a name="l00071"></a><span class="lineno"><a class="line" href="apitest__version_8h.html#a218d195e99d05e20bd23834a506b586c">   71</a></span>&#160;<a class="code" href="apitest__version_8h.html#a218d195e99d05e20bd23834a506b586c">apitest_Version_t</a>;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="comment">/******************************************************************************************************</span></div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="comment"> * FUNCTION PROTOTYPES                                                                                *</span></div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="comment"> *****************************************************************************************************/</span></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> {</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160; </div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="keyword">extern</span> <a class="code" href="structs__apitest__Version__t.html">apitest_Version_t</a> <a class="code" href="apitest__version_8h.html#a3ed4eb763dc2be14db1b34f1cede355b">apitest_get_version</a>(<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160; </div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;}</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/*&lt; APITEST_VERSION_H_ */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="aapitest__version_8h_html_a218d195e99d05e20bd23834a506b586c"><div class="ttname"><a href="apitest__version_8h.html#a218d195e99d05e20bd23834a506b586c">apitest_Version_t</a></div><div class="ttdeci">struct s_apitest_Version_t apitest_Version_t</div><div class="ttdoc">A structure that contains information about the version of API-Test in use.</div></div>
 <div class="ttc" id="aapitest__version_8h_html_a3ed4eb763dc2be14db1b34f1cede355b"><div class="ttname"><a href="apitest__version_8h.html#a3ed4eb763dc2be14db1b34f1cede355b">apitest_get_version</a></div><div class="ttdeci">apitest_Version_t apitest_get_version(void)</div><div class="ttdoc">Get the version of API-Test that is linked.</div><div class="ttdef"><b>Definition:</b> apitest_version.c:38</div></div>
-<div class="ttc" id="astructs__apitest__Version__t_html"><div class="ttname"><a href="structs__apitest__Version__t.html">s_apitest_Version_t</a></div><div class="ttdoc">A structure that contains information about the version of API-Test in use.</div><div class="ttdef"><b>Definition:</b> apitest_version.h:65</div></div>
-<div class="ttc" id="astructs__apitest__Version__t_html_a7cfcf375669039080bd8efa23f0da457"><div class="ttname"><a href="structs__apitest__Version__t.html#a7cfcf375669039080bd8efa23f0da457">s_apitest_Version_t::major</a></div><div class="ttdeci">guint8 major</div><div class="ttdef"><b>Definition:</b> apitest_version.h:66</div></div>
-<div class="ttc" id="astructs__apitest__Version__t_html_aa02e97baccfb9404510c067a11bc46d2"><div class="ttname"><a href="structs__apitest__Version__t.html#aa02e97baccfb9404510c067a11bc46d2">s_apitest_Version_t::minor</a></div><div class="ttdeci">guint8 minor</div><div class="ttdef"><b>Definition:</b> apitest_version.h:67</div></div>
-<div class="ttc" id="astructs__apitest__Version__t_html_afb7e8ac46610734e8d75ed34d6a4846c"><div class="ttname"><a href="structs__apitest__Version__t.html#afb7e8ac46610734e8d75ed34d6a4846c">s_apitest_Version_t::patch</a></div><div class="ttdeci">guint8 patch</div><div class="ttdef"><b>Definition:</b> apitest_version.h:68</div></div>
+<div class="ttc" id="astructs__apitest__Version__t_html"><div class="ttname"><a href="structs__apitest__Version__t.html">s_apitest_Version_t</a></div><div class="ttdoc">A structure that contains information about the version of API-Test in use.</div><div class="ttdef"><b>Definition:</b> apitest_version.h:66</div></div>
+<div class="ttc" id="astructs__apitest__Version__t_html_a7cfcf375669039080bd8efa23f0da457"><div class="ttname"><a href="structs__apitest__Version__t.html#a7cfcf375669039080bd8efa23f0da457">s_apitest_Version_t::major</a></div><div class="ttdeci">guint8 major</div><div class="ttdef"><b>Definition:</b> apitest_version.h:67</div></div>
+<div class="ttc" id="astructs__apitest__Version__t_html_aa02e97baccfb9404510c067a11bc46d2"><div class="ttname"><a href="structs__apitest__Version__t.html#aa02e97baccfb9404510c067a11bc46d2">s_apitest_Version_t::minor</a></div><div class="ttdeci">guint8 minor</div><div class="ttdef"><b>Definition:</b> apitest_version.h:68</div></div>
+<div class="ttc" id="astructs__apitest__Version__t_html_afb7e8ac46610734e8d75ed34d6a4846c"><div class="ttname"><a href="structs__apitest__Version__t.html#afb7e8ac46610734e8d75ed34d6a4846c">s_apitest_Version_t::patch</a></div><div class="ttdeci">guint8 patch</div><div class="ttdef"><b>Definition:</b> apitest_version.h:69</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

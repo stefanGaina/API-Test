@@ -21,6 +21,7 @@
  * 06.08.2023  Gaina Stefan               Initial version.                                            *
  * 07.08.2023  Gaina Stefan               Added cast to macros.                                       *
  * 03.01.2024  Gaina Stefan               Changed version to 2.0.0.                                   *
+ * 14.01.2024  Gaina Stefan               Changed version to 2.0.1.                                   *
  * @details This file defines the type definition for version structure and defines a getter.         *
  * @todo N/A.                                                                                         *
  * @bug No known bugs.                                                                                *
@@ -52,7 +53,7 @@
 /**
  * @brief The compiled patch version.
 */
-#define APITEST_VERSION_PATCH (guint8)0U
+#define APITEST_VERSION_PATCH (guint8)1U
 
 /******************************************************************************************************
  * TYPE DEFINITIONS                                                                                   *
