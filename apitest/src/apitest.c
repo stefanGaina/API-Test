@@ -27,6 +27,7 @@
  * 24.06.2023  Gaina Stefan               Fixed compilation error on linux.                           *
  * 06.08.2023  Gaina Stefan               Removed apitest_get_version.                                *
  * 03.01.2024  Gaina Stefan               Refactored due to the redesign.                             *
+ * 14.01.2024  Gaina Stefan               Fixed a bug relating to "".                                 *
  * @details This file implements the interface defined in apitest.h.                                  *
  * @todo While inputing the commands it would be nice to be able to navigate using the key arrows     *
  * through the command history (like in terminal).                                                    *
@@ -82,7 +83,7 @@ apitest_Command_t command = {};
 /**
  * @brief Created a command object from a string.
  * @param string: The string representing the command.
- * @return The resulted command.
+ * @return void
 */
 static void string_to_command(const gchar* string);
 
@@ -237,20 +238,29 @@ static void string_to_command(const gchar* string)
 		if (NULL == argv_extended)
 		{
 			(void)g_fprintf(stdout, PRINT_PREFIX "Out of memory!\n");
+
+			--command.argc;
+			free_command();
+			command.argc = -1;
+
 			break;
 		}
 		command.argv = argv_extended;
 
-		command.argv[command.argc - 1] = (gchar*)g_try_malloc(++argument_length);
+		command.argv[command.argc - 1] = (gchar*)g_try_malloc(++argument_length * sizeof(gchar));
 		if (NULL == command.argv[command.argc - 1])
 		{
 			(void)g_fprintf(stdout, PRINT_PREFIX "Out of memory!\n");
+
+			free_command();
+			command.argc = -1;
+
 			break;
 		}
 		(void)g_strlcpy(command.argv[command.argc - 1], string, argument_length);
-		string += argument_length;
+		string += argument_length - 1UL;
 
-		if ('\"' == *(string))
+		if ('\"' == *string)
 		{
 			++string;
 		}

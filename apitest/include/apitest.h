@@ -27,6 +27,7 @@
  * 22.06.2023  Gaina Stefan               Fixed version.                                              *
  * 06.08.2023  Gaina Stefan               Removed version.                                            *
  * 03.01.2024  Gaina Stefan               Redesigned the interface.                                   *
+ * 14.01.2024  Gaina Stefan               Removed print from APITEST_MAIN.                            *
  * @details This file defines the type definitions and public interface of API-Test.                  *
  * @todo N/A.                                                                                         *
  * @bug No known bugs.                                                                                *
@@ -93,7 +94,6 @@
 			apitest_get_command(&handler);                                        \
 			if (0 >= command.argc)                                                \
 			{                                                                     \
-				APITEST_INTERNAL_TERMINAL_MODE_PRINT();                           \
 				continue;                                                         \
 			}                                                                     \
 			if (0 == strcmp("help", command.argv[0])                              \

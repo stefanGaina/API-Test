@@ -19,6 +19,11 @@
  * @file apitest_version_test.cpp                                                                     *
  * @date:      @author:                   Reason for change:                                          *
  * 06.08.2023  Gaina Stefan               Initial version.                                            *
+ * 14.01.2024  Gaina Stefan               Added current coverage report.                              *
+ * Current coverage report:                                                                           *
+ * Line coverage: 100.0% (2/2)                                                                        *
+ * Functions:     100.0% (1/1)                                                                        *
+ * Branches:      N/A%   (0/0)                                                                        *
  * @details This file unit-tests apitest_version.c                                                    *
  * @todo N/A.                                                                                         *
  * @bug No known bugs.                                                                                *

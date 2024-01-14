@@ -5,11 +5,12 @@
 #   03.06.2023  Gaina Stefan               Initial version.                                           #
 #   05.06.2023  Gaina Stefan               Fixed rules for linux.                                     #
 #   13.01.2024  Gaina Stefan               Refactored.                                                #
+#   14.01.2024  Gaina Stefan               Added WRITE_ONLY_FILENAME.                                 #
 # Description: This Makefile is used to compile unit-test for apitest.c, run them and generate        #
 # coverage report.                                                                                    #
 #######################################################################################################
 
-CXXFLAGS += `pkg-config --cflags glib-2.0`
+CXXFLAGS += `pkg-config --cflags glib-2.0` -DWRITE_ONLY_FILENAME='"$(WRITE_ONLY_FILENAME)"'
 CFLAGS    = `pkg-config --cflags glib-2.0` -fno-inline -g -fprofile-arcs -ftest-coverage --coverage
 LDFLAGS  += `pkg-config --libs glib-2.0`
 
@@ -21,6 +22,8 @@ INCLUDES = -I../../../vendor/gtest/include \
 TEST_FILE_NAME   := apitest_test
 TESTED_FILE_NAME := apitest
 EXECUTABLE       := apitest-ut
+
+WRITE_ONLY_FILENAME = write_only.txt
 
 all: | create_dir $(EXECUTABLE)
 
@@ -38,8 +41,13 @@ $(EXECUTABLE):
 run_tests: execute_tests copy_results
 
 ### EXECUTE TESTS ###
-execute_tests:
+execute_tests: setup_tests
 	$(VALGRIND) --log-file="../../../$(COVERAGE_REPORT)/memcheck_$(TESTED_FILE_NAME).txt" $(OBJ)/$(EXECUTABLE)
+
+### SETUP TESTS ###
+setup_tests:
+	touch $(WRITE_ONLY_FILENAME)
+	chmod 0222 $(WRITE_ONLY_FILENAME)
 
 ### COPY RESULTS ###
 copy_results:
@@ -57,3 +65,4 @@ clean:
 	rm -rf $(TESTED_FILE_DIR)/*.gcov
 	rm -rf $(TESTED_FILE_DIR)/*.gcda
 	rm -rf $(TESTED_FILE_DIR)/*.gcno
+	rm -rf $(WRITE_ONLY_FILENAME)

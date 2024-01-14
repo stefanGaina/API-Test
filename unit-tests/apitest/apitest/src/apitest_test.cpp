@@ -27,10 +27,11 @@
  * 24.06.2023  Gaina Stefan               Fixed compilation error on linux.                           *
  * 06.08.2023  Gaina Stefan               Removed version test.                                       *
  * 13.01.2024  Gaina Stefan               Refactored.                                                 *
+ * 14.01.2024  Gaina Stefan               Finished the tests.                                         *
  * Current coverage report:                                                                           *
- * Line coverage: 26.4% (24/91)                                                                       *
- * Functions:     60.0% (3/5)                                                                         *
- * Branches:      11.5% (6/52)                                                                        *
+ * Line coverage: 91.7%  (88/96)                                                                      *
+ * Functions:     100.0% (5/5)                                                                        *
+ * Branches:      86.5%  (45/52)                                                                      *
  * @details This file unit-tests apitest.c                                                            *
  * @todo N/A.                                                                                         *
  * @bug apitest_get_command can not be tested with input from terminal.                               *
@@ -86,18 +87,32 @@ TEST_F(ApiTest, apitest_init_tryMalloc_fail)
 		.WillOnce(testing::Return((gpointer)NULL));
 
 	ASSERT_EQ(FALSE, apitest_init(&handler, NULL, NULL, 128UL)) << "Successfully initialized handler even though memory allocation failed!";
+
+	EXPECT_CALL(glibMock, g_free(testing::_));
+	apitest_deinit(&handler);
 }
 
 TEST_F(ApiTest, apitest_init_defaultFile_success)
 {
-	static constexpr const gsize BUFFER_SIZE = 128UL;
-
-	apitest_Handler_t handler             = {};
-	gchar             buffer[BUFFER_SIZE] = "";
+	apitest_Handler_t handler     = {};
+	gchar             buffer[128] = "";
 
 	EXPECT_CALL(glibMock, g_try_malloc(testing::_))
 		.WillOnce(testing::Return((gpointer)buffer));
-	ASSERT_EQ(TRUE, apitest_init(&handler, "test> ", NULL, BUFFER_SIZE)) << "Failed to initialize handler!";
+	ASSERT_EQ(TRUE, apitest_init(&handler, "test> ", NULL, sizeof(buffer))) << "Failed to initialize handler!";
+
+	EXPECT_CALL(glibMock, g_free(testing::_));
+	apitest_deinit(&handler);
+}
+
+TEST_F(ApiTest, apitest_init_writeOnlyFile_success)
+{
+	apitest_Handler_t handler     = {};
+	gchar             buffer[128] = "";
+
+	EXPECT_CALL(glibMock, g_try_malloc(testing::_))
+		.WillOnce(testing::Return((gpointer)buffer));
+	ASSERT_EQ(TRUE, apitest_init(&handler, NULL, WRITE_ONLY_FILENAME, sizeof(buffer))) << "Failed to initialize handler!";
 
 	EXPECT_CALL(glibMock, g_free(testing::_));
 	apitest_deinit(&handler);
@@ -107,19 +122,60 @@ TEST_F(ApiTest, apitest_init_defaultFile_success)
  * apitest_get_command                                                                                *
  *****************************************************************************************************/
 
-// TEST_FF(ApiTest, apitest_get_command_success)
-// {
-// 	static constexpr const gsize BUFFER_SIZE = 128UL;
+TEST_F(ApiTest, apitest_get_command_tryRealloc_fail)
+{
+	apitest_Handler_t handler     = {};
+	gchar             buffer[128] = "";
 
-// 	apitest_Handler_t handler             = {};
-// 	gchar             buffer[BUFFER_SIZE] = "";
+	EXPECT_CALL(glibMock, g_try_malloc(testing::_))
+		.WillOnce(testing::Return((gpointer)buffer));
+	ASSERT_EQ(TRUE, apitest_init(&handler, NULL, "test.txt", sizeof(buffer))) << "Failed to initialize handler!";
 
-// 	EXPECT_CALL(glibMock, g_try_malloc(testing::_))
-// 		.WillOnce(testing::Return((gpointer)buffer));
-// 	ASSERT_EQ(TRUE, apitest_init(&handler, NULL, "../test.txt", BUFFER_SIZE)) << "Failed to initialize handler!";
+	EXPECT_CALL(glibMock, g_try_realloc(testing::_, testing::_))
+		.WillOnce(testing::Return((gpointer)NULL));
+	apitest_get_command(&handler);
 
-// 	apitest_get_command(&handler);
+	EXPECT_CALL(glibMock, g_free(testing::_));
+	apitest_deinit(&handler);
+}
 
-// 	EXPECT_CALL(glibMock, g_free(testing::_));
-// 	apitest_deinit(&handler);
-// }
+TEST_F(ApiTest, apitest_get_command_tryMalloc_fail)
+{
+	apitest_Handler_t handler        = {};
+	gchar             buffer[2][128] = {};
+
+	EXPECT_CALL(glibMock, g_try_malloc(testing::_))
+		.WillOnce(testing::Return((gpointer)buffer[0]));
+	ASSERT_EQ(TRUE, apitest_init(&handler, NULL, "test.txt", sizeof(buffer))) << "Failed to initialize handler!";
+
+	EXPECT_CALL(glibMock, g_try_realloc(testing::_, testing::_))
+		.WillOnce(testing::Return((gpointer)buffer[1]));
+	EXPECT_CALL(glibMock, g_try_malloc(testing::_))
+		.WillOnce(testing::Return((gpointer)NULL));
+	apitest_get_command(&handler);
+
+	EXPECT_CALL(glibMock, g_free(testing::_));
+	apitest_deinit(&handler);
+}
+
+TEST_F(ApiTest, apitest_get_command_success)
+{
+	apitest_Handler_t handler        = {};
+	gchar             buffer[3][128] = {};
+
+	EXPECT_CALL(glibMock, g_try_malloc(testing::_))
+		.WillOnce(testing::Return((gpointer)buffer[0]));
+	ASSERT_EQ(TRUE, apitest_init(&handler, NULL, "test.txt", sizeof(buffer))) << "Failed to initialize handler!";
+
+	EXPECT_CALL(glibMock, g_try_realloc(testing::_, testing::_))
+		.WillRepeatedly(testing::Return((gpointer)buffer[1]));
+	EXPECT_CALL(glibMock, g_try_malloc(testing::_))
+		.WillRepeatedly(testing::Return((gpointer)buffer[2]));
+	EXPECT_CALL(glibMock, g_free(testing::_))
+		.Times(7);
+	apitest_get_command(&handler);
+	apitest_get_command(&handler);
+	apitest_get_command(&handler);
+
+	apitest_deinit(&handler);
+}
