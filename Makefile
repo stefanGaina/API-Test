@@ -10,6 +10,7 @@
 #   06.08.2023  Gaina Stefan               Added apitest_version to info files.                       #
 #   03.01.2024  Gaina Stefan               Added dogygen.                                             #
 #   13.01.2024  Gaina Stefan               Added info files.                                          #
+#   18.01.2024  Gaina Stefan               Added compilation timer.                                   #
 # Description: This Makefile is used to invoke the Makefiles in the subdirectories.                   #
 #######################################################################################################
 
@@ -28,8 +29,10 @@ INFO_FILES = $(COVERAGE_REPORT)/apitest_internal.info \
 			 $(COVERAGE_REPORT)/apitest.info          \
 			 $(COVERAGE_REPORT)/dummy_library.info
 
+COMPILATION_TIMER = cd vendor/Compilation-Timer && ./compilation-timer
+
 ### MAKE SUBDIRECTORIES ###
-all: build doxygen
+all: start_timer build doxygen end_timer
 
 build:
 	$(MAKE) -C apitest
@@ -37,16 +40,18 @@ build:
 	$(MAKE) -C test
 
 ### CLEAN SUBDIRECTORIES ###
-clean:
+clean: start_timer
 	$(MAKE) clean -C apitest
 	$(MAKE) clean -C dummy-lib
 	$(MAKE) clean -C test
+	$(COMPILATION_TIMER) end
 
 ### MAKE UNIT-TESTS ###
-ut: ut-clean
+ut: start_timer ut-clean
 	mkdir -p $(COVERAGE_REPORT)
 	$(MAKE) -C unit-tests
 	perl $(GENHTML) $(INFO_FILES) $(GENHTML_FLAGS)
+	$(COMPILATION_TIMER) end
 
 ### CLEAN UNIT-TESTS ###
 ut-clean:
@@ -56,3 +61,11 @@ ut-clean:
 ### MAKE DOXYGEN ###
 doxygen:
 	doxygen docs/doxygen.conf
+
+### START TIMER ###
+start_timer:
+	$(COMPILATION_TIMER) start
+
+### END TIMER ###
+end_timer:
+	$(COMPILATION_TIMER) end
