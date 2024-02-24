@@ -1,9 +1,8 @@
 #######################################################################################################
-# Copyright (C) API-Test 2024                                                                         #
-# Module history:                                                                                     #
-#   Date:       Author:                    Reason:                                                    #
-#   13.01.2024  Gaina Stefan               Initial version.                                           #
-# Description: This Makefile is used to invoke the Makefiles in the subdirectories.                   #
+# Copyright (C) API-Test 2024
+# Author: Gaina Stefan
+# Date: 13.01.2024
+# Description: This Makefile is used to invoke the Makefiles in the subdirectories.
 #######################################################################################################
 
 export TESTED_FILE_DIR := ../../../apitest/$(SRC)

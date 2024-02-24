@@ -1,5 +1,5 @@
 <map id="apitest/src/apitest_version.c" name="apitest/src/apitest_version.c">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,144,47"/>
-<area shape="rect" id="node2" href="$apitest__version_8h.html" title=" " alt="" coords="7,95,142,121"/>
+<area shape="rect" id="node1" title="This file implements the interface defined in apitest_version.h." alt="" coords="5,5,144,47"/>
+<area shape="rect" id="node2" href="$apitest__version_8h.html" title="This file defines the type definition for version structure and defines a getter." alt="" coords="7,95,142,121"/>
 <area shape="rect" id="node3" title=" " alt="" coords="45,169,104,196"/>
 </map>

@@ -1,15 +1,9 @@
 #######################################################################################################
-# Copyright (C) API-Test 2024                                                                         #
-# Module history:                                                                                     #
-#   Date:       Author:                    Reason:                                                    #
-#   02.06.2023  Gaina Stefan               Initial version.                                           #
-#   02.06.2023  Gaina Stefan               Fixed copy_libraries rule.                                 #
-#   03.06.2023  Gaina Stefan               Updated to support parent Makefile updates.                #
-#   05.06.2023  Gaina Stefan               Fixed rules for linux.                                     #
-#   06.08.2023  Gaina Stefan               Renamed linked library.                                    #
-#   03.01.2024  Gaina Stefan               Added Glib.                                                #
-# Description: This Makefile is used to generate an example for API-Test loading a dummy library and  #
-# testing its API.                                                                                    #
+# Copyright (C) API-Test 2024
+# Author: Gaina Stefan
+# Date: 02.06.2023
+# Description: This Makefile is used to generate an example for API-Test loading a dummy library and
+# testing its API.
 #######################################################################################################
 
 CFLAGS  = `pkg-config --cflags glib-2.0` -Wall -Werror

@@ -1,35 +1,35 @@
 /******************************************************************************************************
- * API-Test Copyright (C) 2024                                                                        *
- *                                                                                                    *
- * This software is provided 'as-is', without any express or implied warranty. In no event will the   *
- * authors be held liable for any damages arising from the use of this software.                      *
- *                                                                                                    *
- * Permission is granted to anyone to use this software for any purpose, including commercial         *
- * applications, and to alter it and redistribute it freely, subject to the following restrictions:   *
- *                                                                                                    *
- * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the   *
- *    original software. If you use this software in a product, an acknowledgment in the product      *
- *    documentation would be appreciated but is not required.                                         *
- * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being *
- *    the original software.                                                                          *
- * 3. This notice may not be removed or altered from any source distribution.                         *
-******************************************************************************************************/
+ * API-Test Copyright (C) 2024
+ *
+ * This software is provided 'as-is', without any express or implied warranty. In no event will the
+ * authors be held liable for any damages arising from the use of this software.
+ *
+ * Permission is granted to anyone to use this software for any purpose, including commercial
+ * applications, and to alter it and redistribute it freely, subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the
+ *    original software. If you use this software in a product, an acknowledgment in the product
+ *    documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being
+ *    the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
+ *****************************************************************************************************/
 
-/******************************************************************************************************
- * @file apitest_internal_test.cpp                                                                    *
- * @date:      @author:                   Reason for change:                                          *
- * 13.01.2024  Gaina Stefan               Initial version.                                            *
- * Current coverage report:                                                                           *
- * Line coverage: 100.0% (28/28)                                                                      *
- * Functions:     100.0% (3/3)                                                                        *
- * Branches:      100.0% (12/12)                                                                      *
- * @details This file unit-tests apitest_internal.c                                                   *
- * @todo N/A.                                                                                         *
- * @bug No known bugs.                                                                                *
+/** ***************************************************************************************************
+ * @file apitest_internal_test.c
+ * @author Gaina Stefan
+ * @date 13.01.2024
+ * @brief This file unit-tests apitest_internal.c.
+ * @details Current coverage report:
+ * Line coverage: 100.0% (27/27)
+ * Functions:     100.0% (3/3)
+ * Branches:      100.0% (12/12)
+ * @todo N/A.
+ * @bug No known bugs.
  *****************************************************************************************************/
 
 /******************************************************************************************************
- * HEADER FILE INCLUDES                                                                               *
+ * HEADER FILE INCLUDES
  *****************************************************************************************************/
 
 #include <gtest/gtest.h>
@@ -37,7 +37,7 @@
 #include "apitest_internal.h"
 
 /******************************************************************************************************
- * apitest_internal_string_to_int64                                                                   *
+ * apitest_internal_string_to_int64
  *****************************************************************************************************/
 
 TEST(ApiTestInternal, apitest_internal_string_to_int64_invalidCharacter_fail)
@@ -65,7 +65,7 @@ TEST(ApiTestInternal, apitest_internal_string_to_int64_success)
 }
 
 /******************************************************************************************************
- * apitest_internal_string_to_uint64                                                                  *
+ * apitest_internal_string_to_uint64
  *****************************************************************************************************/
 
 TEST(ApiTestInternal, apitest_internal_string_to_uint64_invalidCharacter_fail)
@@ -87,7 +87,7 @@ TEST(ApiTestInternal, apitest_internal_string_to_uint64_success)
 }
 
 /******************************************************************************************************
- * apitest_internal_string_to_double                                                                  *
+ * apitest_internal_string_to_double
  *****************************************************************************************************/
 
 TEST(ApiTestInternal, apitest_internal_string_to_double_invalidCharacter_fail)

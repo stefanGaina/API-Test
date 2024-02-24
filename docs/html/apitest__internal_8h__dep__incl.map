@@ -1,6 +1,6 @@
 <map id="apitest/include/apitest_internal.h" name="apitest/include/apitest_internal.h">
-<area shape="rect" id="node1" title=" " alt="" coords="102,5,269,47"/>
-<area shape="rect" id="node2" href="$apitest_8h.html" title=" " alt="" coords="5,102,184,129"/>
-<area shape="rect" id="node4" href="$apitest__internal_8c.html" title=" " alt="" coords="208,95,347,136"/>
-<area shape="rect" id="node3" href="$apitest_8c.html" title=" " alt="" coords="19,184,170,211"/>
+<area shape="rect" id="node1" title="This file defines macros and interfaces of API&#45;Test that are meant to be internal." alt="" coords="102,5,269,47"/>
+<area shape="rect" id="node2" href="$apitest_8h.html" title="This file defines the type definitions and public interface of API&#45;Test." alt="" coords="5,102,184,129"/>
+<area shape="rect" id="node4" href="$apitest__internal_8c.html" title="This file implements the interface defined in apitest_internal.h." alt="" coords="208,95,347,136"/>
+<area shape="rect" id="node3" href="$apitest_8c.html" title="This file implements the interface defined in apitest.h." alt="" coords="19,184,170,211"/>
 </map>

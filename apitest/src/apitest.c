@@ -1,101 +1,91 @@
 /******************************************************************************************************
- * API-Test Copyright (C) 2024                                                                        *
- *                                                                                                    *
- * This software is provided 'as-is', without any express or implied warranty. In no event will the   *
- * authors be held liable for any damages arising from the use of this software.                      *
- *                                                                                                    *
- * Permission is granted to anyone to use this software for any purpose, including commercial         *
- * applications, and to alter it and redistribute it freely, subject to the following restrictions:   *
- *                                                                                                    *
- * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the   *
- *    original software. If you use this software in a product, an acknowledgment in the product      *
- *    documentation would be appreciated but is not required.                                         *
- * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being *
- *    the original software.                                                                          *
- * 3. This notice may not be removed or altered from any source distribution.                         *
-******************************************************************************************************/
+ * API-Test Copyright (C) 2024
+ *
+ * This software is provided 'as-is', without any express or implied warranty. In no event will the
+ * authors be held liable for any damages arising from the use of this software.
+ *
+ * Permission is granted to anyone to use this software for any purpose, including commercial
+ * applications, and to alter it and redistribute it freely, subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the
+ *    original software. If you use this software in a product, an acknowledgment in the product
+ *    documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being
+ *    the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
+ *****************************************************************************************************/
 
-/******************************************************************************************************
- * @file apitest.c                                                                                    *
- * @date:      @author:                   Reason for change:                                          *
- * 02.06.2023  Gaina Stefan               Initial version.                                            *
- * 03.06.2023  Gaina Stefan               Fixed argc = -1 after freeing command.                      *
- * 03.06.2023  Gaina Stefan               Added implementation for apitest_string_to_float.           *
- * 05.06.2023  Gaina Stefan               Improved apitest_get_command with EOF detection.            *
- * 11.06.2023  Gaina Stefan               Added parser for input string parameters with spaces.       *
- * 22.06.2023  Gaina Stefan               Refactored apitest_string_to_integer.                       *
- * 24.06.2023  Gaina Stefan               Fixed compilation error on linux.                           *
- * 06.08.2023  Gaina Stefan               Removed apitest_get_version.                                *
- * 03.01.2024  Gaina Stefan               Refactored due to the redesign.                             *
- * 14.01.2024  Gaina Stefan               Fixed a bug relating to "".                                 *
- * @details This file implements the interface defined in apitest.h.                                  *
- * @todo While inputing the commands it would be nice to be able to navigate using the key arrows     *
- * through the command history (like in terminal).                                                    *
- * @bug No known bugs.                                                                                *
+/** ***************************************************************************************************
+ * @file apitest.c
+ * @author Gaina Stefan
+ * @date 02.08.2023
+ * @brief This file implements the interface defined in apitest.h.
+ * @todo While inputing the commands it would be nice to be able to navigate using the key arrows
+ * through the command history (like in terminal).
+ * @bug No known bugs.
  *****************************************************************************************************/
 
 /******************************************************************************************************
- * HEADER FILE INCLUDES                                                                               *
+ * HEADER FILE INCLUDES
  *****************************************************************************************************/
 
 #include "apitest.h"
 
 /******************************************************************************************************
- * MACROS                                                                                             *
+ * MACROS
  *****************************************************************************************************/
 
-/**
+/** ***************************************************************************************************
  * @brief Tag attached at the beginning of the messages printed by the library.
-*/
+ *****************************************************************************************************/
 #define PRINT_PREFIX "[API-TEST] "
 
 /******************************************************************************************************
- * TYPE DEFINITIONS                                                                                   *
+ * TYPE DEFINITIONS
  *****************************************************************************************************/
 
-/**
+/** ***************************************************************************************************
  * @brief Explicit data type of the handler for internal usage.
-*/
+ *****************************************************************************************************/
 typedef struct s_apitest_PrivateHandler_t
 {
-	FILE*        file;        /**< The file from which the commands are being taken.        */
-	const gchar* title;       /**< String that will be displayed during from terminal mode. */
-	gchar*       buffer;      /**< The buffer in which the commands are be stored.          */
-	gsize        buffer_size; /**< The size of the allocated buffer.                        */
-}
-apitest_PrivateHandler_t;
+	FILE*		 file;		  /**< The file from which the commands are being taken.        */
+	const gchar* title;		  /**< String that will be displayed during from terminal mode. */
+	gchar*		 buffer;	  /**< The buffer in which the commands are be stored.          */
+	gsize		 buffer_size; /**< The size of the allocated buffer.                        */
+} apitest_PrivateHandler_t;
 
 /******************************************************************************************************
- * GLOBAL VARIABLES                                                                                   *
+ * GLOBAL VARIABLES
  *****************************************************************************************************/
 
-/**
- * @brief The output variable of apitest_get_command(). This is global so that it can be accessed through
- * macros leading to little code on test application side (this is acceptable because it's not meant to
- * be used for anything other than testing).
-*/
+/** ***************************************************************************************************
+ * @brief The output variable of apitest_get_command(). This is global so that it can be accessed
+ * through macros leading to little code on test application side (this is acceptable because it's not
+ * meant to be used for anything other than testing).
+ *****************************************************************************************************/
 apitest_Command_t command = {};
 
 /******************************************************************************************************
- * LOCAL FUNCTIONS                                                                                    *
+ * LOCAL FUNCTIONS
  *****************************************************************************************************/
 
-/**
+/** ***************************************************************************************************
  * @brief Created a command object from a string.
  * @param string: The string representing the command.
  * @return void
-*/
+ *****************************************************************************************************/
 static void string_to_command(const gchar* string);
 
-/**
+/** ***************************************************************************************************
  * @brief Frees the current arguments and resets the counter.
  * @param void
  * @return void
-*/
+ *****************************************************************************************************/
 static void free_command(void);
 
 /******************************************************************************************************
- * FUNCTION DEFINITIONS                                                                               *
+ * FUNCTION DEFINITIONS
  *****************************************************************************************************/
 
 gboolean apitest_init(apitest_Handler_t* const public_handler, const gchar* const title, const gchar* const file_name, const gsize buffer_size)
@@ -150,14 +140,14 @@ void apitest_deinit(apitest_Handler_t* const public_handler)
 	}
 
 	g_free(handler->buffer);
-	handler->buffer      = NULL;
+	handler->buffer		 = NULL;
 	handler->buffer_size = 0UL;
 }
 
 void apitest_get_command(apitest_Handler_t* const public_handler)
 {
-	apitest_PrivateHandler_t* const handler              = (apitest_PrivateHandler_t*)public_handler;
-	gsize                           last_character_index = 0UL;
+	apitest_PrivateHandler_t* const handler				 = (apitest_PrivateHandler_t*)public_handler;
+	gsize							last_character_index = 0UL;
 
 	free_command();
 	do
@@ -178,8 +168,7 @@ void apitest_get_command(apitest_Handler_t* const public_handler)
 			return;
 		}
 	}
-	while (0 == strcmp("\n", handler->buffer)
-	    || 0 == strcmp("\0", handler->buffer));
+	while (0 == g_strcmp0("\n", handler->buffer) || 0 == g_strcmp0("\0", handler->buffer));
 
 	last_character_index = strlen(handler->buffer) - 1UL;
 	if ('\n' == handler->buffer[last_character_index])
@@ -197,8 +186,8 @@ void apitest_get_command(apitest_Handler_t* const public_handler)
 
 static void string_to_command(const gchar* string)
 {
-	gchar** argv_extended   = NULL;
-	gsize   argument_length = 0UL;
+	gchar** argv_extended	= NULL;
+	gsize	argument_length = 0UL;
 
 	while ('\0' != *string)
 	{
