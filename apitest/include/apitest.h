@@ -58,49 +58,7 @@
  * @return void
  * @see APITEST_HANDLE_COMMAND
  *****************************************************************************************************/
-#define APITEST_MAIN(title, buffer_size, handler_function, print_help_function)                                                                                    \
-	int main(int argc, char* argv[])                                                                                                                               \
-	{                                                                                                                                                              \
-		const gchar*	  input_file_name = NULL;                                                                                                                  \
-		apitest_Handler_t handler		  = {};                                                                                                                    \
-		if (1 == argc)                                                                                                                                             \
-		{                                                                                                                                                          \
-			APITEST_INTERNAL_TERMINAL_MODE_PRINT();                                                                                                                \
-		}                                                                                                                                                          \
-		else                                                                                                                                                       \
-		{                                                                                                                                                          \
-			input_file_name = argv[1];                                                                                                                             \
-			(void)g_fprintf(stdout, "Running in file mode!\n");                                                                                                    \
-			if (3 < argc)                                                                                                                                          \
-			{                                                                                                                                                      \
-				(void)g_fprintf(stdout, "Extra parameters will be ignored!\n");                                                                                    \
-			}                                                                                                                                                      \
-		}                                                                                                                                                          \
-		if (FALSE == apitest_init(&handler, title, input_file_name, buffer_size))                                                                                  \
-		{                                                                                                                                                          \
-			return EXIT_FAILURE;                                                                                                                                   \
-		}                                                                                                                                                          \
-		while (TRUE)                                                                                                                                               \
-		{                                                                                                                                                          \
-			apitest_get_command(&handler);                                                                                                                         \
-			if (0 >= command.argc)                                                                                                                                 \
-			{                                                                                                                                                      \
-				continue;                                                                                                                                          \
-			}                                                                                                                                                      \
-			if (0 == g_strcmp0("help", command.argv[0]) || 0 == g_strcmp0("h", command.argv[0]))                                                                   \
-			{                                                                                                                                                      \
-				print_help_function();                                                                                                                             \
-				continue;                                                                                                                                          \
-			}                                                                                                                                                      \
-			if (0 == g_strcmp0("quit", command.argv[0]) || 0 == g_strcmp0("q", command.argv[0]))                                                                   \
-			{                                                                                                                                                      \
-				break;                                                                                                                                             \
-			}                                                                                                                                                      \
-			handler_function();                                                                                                                                    \
-		}                                                                                                                                                          \
-		apitest_deinit(&handler);                                                                                                                                  \
-		return EXIT_SUCCESS;                                                                                                                                       \
-	}
+#define APITEST_MAIN(title, buffer_size, handler_function, print_help_function) APITEST_INTERNAL_MAIN(title, buffer_size, handler_function, print_help_function)
 
 /** ***************************************************************************************************
  * @brief Checks if the first argument matches the function name and if the count of parameters is also
@@ -112,22 +70,7 @@
  * be made successfully.
  * @return void
  *****************************************************************************************************/
-#define APITEST_HANDLE_COMMAND(function_name, parameters_count)                                                                                                    \
-	do                                                                                                                                                             \
-	{                                                                                                                                                              \
-		if (0 != strcmp(#function_name, command.argv[0]))                                                                                                          \
-		{                                                                                                                                                          \
-			break;                                                                                                                                                 \
-		}                                                                                                                                                          \
-		if (parameters_count != command.argc - 1)                                                                                                                  \
-		{                                                                                                                                                          \
-			(void)g_fprintf(stdout, "Invalid number of parameters! (required: %" PRIu8 ")\n", parameters_count);                                                   \
-			return;                                                                                                                                                \
-		}                                                                                                                                                          \
-		function_name##_test();                                                                                                                                    \
-		return;                                                                                                                                                    \
-	}                                                                                                                                                              \
-	while (FALSE)
+#define APITEST_HANDLE_COMMAND(function_name, parameters_count) APITEST_INTERNAL_HANDLE_COMMAND(function_name, parameters_count)
 
 /** ***************************************************************************************************
  * @brief Converts a command parameter from the string format to a 64 bit signed integer. If the input
@@ -238,7 +181,7 @@
 typedef struct s_apitest_Command_t
 {
 	gint32	argc; /**< How many arguments does the command have. */
-	gchar** argv; /**< The command splitted by arguments.        */
+	gchar** argv; /**< The command splitted by arguments.		 */
 } apitest_Command_t;
 
 /** ***************************************************************************************************

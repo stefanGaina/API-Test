@@ -5,10 +5,10 @@
 # Description: This Makefile is used to generate the API-Test library.
 #######################################################################################################
 
-CFLAGS = `pkg-config --cflags glib-2.0` -Wall -Werror -fanalyzer -fPIC -O2
-LDFLAGS = `pkg-config --libs glib-2.0`
+CFLAGS	:= `pkg-config --cflags glib-2.0` -Wall -Werror -fanalyzer -fPIC -O2
+LDFLAGS := `pkg-config --libs glib-2.0`
 
-INCLUDES = -Iinclude
+INCLUDES := -Iinclude
 
 SOURCES := $(wildcard $(SRC)/*.c)
 OBJECTS := $(patsubst $(SRC)/%.c, $(OBJ)/%.o, $(SOURCES))

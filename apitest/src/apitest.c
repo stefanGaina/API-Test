@@ -49,10 +49,10 @@
  *****************************************************************************************************/
 typedef struct s_apitest_PrivateHandler_t
 {
-	FILE*		 file;		  /**< The file from which the commands are being taken.        */
+	FILE*		 file;		  /**< The file from which the commands are being taken.		*/
 	const gchar* title;		  /**< String that will be displayed during from terminal mode. */
-	gchar*		 buffer;	  /**< The buffer in which the commands are be stored.          */
-	gsize		 buffer_size; /**< The size of the allocated buffer.                        */
+	gchar*		 buffer;	  /**< The buffer in which the commands are be stored.			*/
+	gsize		 buffer_size; /**< The size of the allocated buffer.						*/
 } apitest_PrivateHandler_t;
 
 /******************************************************************************************************

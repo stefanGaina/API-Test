@@ -7,17 +7,17 @@
 #######################################################################################################
 
 CXXFLAGS += `pkg-config --cflags glib-2.0` -DWRITE_ONLY_FILENAME='"$(WRITE_ONLY_FILENAME)"'
-CFLAGS    = `pkg-config --cflags glib-2.0` -fno-inline -g -fprofile-arcs -ftest-coverage --coverage
+CFLAGS	 := `pkg-config --cflags glib-2.0` -fno-inline -g -fprofile-arcs -ftest-coverage --coverage
 LDFLAGS  += `pkg-config --libs glib-2.0`
 
-INCLUDES = -I../../../vendor/gtest/include \
-		   -I../../../vendor/gmock/include \
-		   -I../../mocks                   \
-		   -I../../../apitest/include
+INCLUDES := -I../../../vendor/gtest/include \
+			-I../../../vendor/gmock/include \
+			-I../../mocks					\
+			-I../../../apitest/include
 
-TEST_FILE_NAME   := apitest_test
+TEST_FILE_NAME	 := apitest_test
 TESTED_FILE_NAME := apitest
-EXECUTABLE       := apitest-ut
+EXECUTABLE		 := apitest-ut
 
 WRITE_ONLY_FILENAME = write_only.txt
 

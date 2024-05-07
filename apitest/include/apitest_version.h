@@ -61,9 +61,9 @@
  *****************************************************************************************************/
 typedef struct s_apitest_Version_t
 {
-	guint8 major; /**< Increments with massive changes, additions, and enhancement.        */
+	guint8 major; /**< Increments with massive changes, additions, and enhancement.		   */
 	guint8 minor; /**< Increments with backwards-compatible changes to the major revision. */
-	guint8 patch; /**< Increments with fixes to the minor revision.                        */
+	guint8 patch; /**< Increments with fixes to the minor revision.						   */
 } apitest_Version_t;
 
 /******************************************************************************************************

@@ -38,6 +38,89 @@
  *****************************************************************************************************/
 
 /** ***************************************************************************************************
+ * @brief This defines the main function and parses the arguments for an input file. Initializes
+ * API-Test and parses commands until "quit" or "q" is inputed by the user.
+ * @param title: The text printed at the beginning of the line when waiting for the commands to be
+ * inputed in terminal and not file.
+ * @param buffer_size: The maximum length of the inputed command (if exceeded it will be truncated).
+ * @param handler_function: This function is called everytime a new command has been successfully got.
+ * @param print_help_function: This function is called when "help" or "h" is inputted by
+ * the user.
+ * @return void
+ * @see APITEST_HANDLE_COMMAND
+ *****************************************************************************************************/
+#define APITEST_INTERNAL_MAIN(title, buffer_size, handler_function, print_help_function)                                                                           \
+	int main(int argc, char** argv)                                                                                                                                \
+	{                                                                                                                                                              \
+		const gchar*	  input_file_name = NULL;                                                                                                                  \
+		apitest_Handler_t handler		  = {};                                                                                                                    \
+		if (1 == argc)                                                                                                                                             \
+		{                                                                                                                                                          \
+			APITEST_INTERNAL_TERMINAL_MODE_PRINT();                                                                                                                \
+		}                                                                                                                                                          \
+		else                                                                                                                                                       \
+		{                                                                                                                                                          \
+			input_file_name = argv[1];                                                                                                                             \
+			(void)g_fprintf(stdout, "Running in file mode!\n");                                                                                                    \
+			if (3 < argc)                                                                                                                                          \
+			{                                                                                                                                                      \
+				(void)g_fprintf(stdout, "Extra parameters will be ignored!\n");                                                                                    \
+			}                                                                                                                                                      \
+		}                                                                                                                                                          \
+		if (FALSE == apitest_init(&handler, title, input_file_name, buffer_size))                                                                                  \
+		{                                                                                                                                                          \
+			return EXIT_FAILURE;                                                                                                                                   \
+		}                                                                                                                                                          \
+		while (TRUE)                                                                                                                                               \
+		{                                                                                                                                                          \
+			apitest_get_command(&handler);                                                                                                                         \
+			if (0 >= command.argc)                                                                                                                                 \
+			{                                                                                                                                                      \
+				continue;                                                                                                                                          \
+			}                                                                                                                                                      \
+			if (0 == g_strcmp0("help", command.argv[0]) || 0 == g_strcmp0("h", command.argv[0]))                                                                   \
+			{                                                                                                                                                      \
+				print_help_function();                                                                                                                             \
+				continue;                                                                                                                                          \
+			}                                                                                                                                                      \
+			if (0 == g_strcmp0("quit", command.argv[0]) || 0 == g_strcmp0("q", command.argv[0]))                                                                   \
+			{                                                                                                                                                      \
+				break;                                                                                                                                             \
+			}                                                                                                                                                      \
+			handler_function();                                                                                                                                    \
+		}                                                                                                                                                          \
+		apitest_deinit(&handler);                                                                                                                                  \
+		return EXIT_SUCCESS;                                                                                                                                       \
+	}
+
+/** ***************************************************************************************************
+ * @brief Checks if the first argument matches the function name and if the count of parameters is also
+ * correct calls another function with the name of the previous with "_test" postfix added (e.g. for
+ * example() an example_test() needs to be defined).
+ * @param function_name: The name of the function the user wants to call (he will have to input its name
+ * first).
+ * @param parameters_count: How many parameters need to be inputted by the user for the function call to
+ * be made successfully.
+ * @return void
+ *****************************************************************************************************/
+#define APITEST_INTERNAL_HANDLE_COMMAND(function_name, parameters_count)                                                                                           \
+	do                                                                                                                                                             \
+	{                                                                                                                                                              \
+		if (0 != strcmp(#function_name, command.argv[0]))                                                                                                          \
+		{                                                                                                                                                          \
+			break;                                                                                                                                                 \
+		}                                                                                                                                                          \
+		if (parameters_count != command.argc - 1)                                                                                                                  \
+		{                                                                                                                                                          \
+			(void)g_fprintf(stdout, "Invalid number of parameters! (required: %" PRIu8 ")\n", parameters_count);                                                   \
+			return;                                                                                                                                                \
+		}                                                                                                                                                          \
+		function_name##_test();                                                                                                                                    \
+		return;                                                                                                                                                    \
+	}                                                                                                                                                              \
+	while (FALSE)
+
+/** ***************************************************************************************************
  * @brief Prints to the user that the input will be received from the terminal.
  * @param void
  * @return void
@@ -87,6 +170,10 @@
 		}                                                                                                                                                          \
 	}                                                                                                                                                              \
 	while (FALSE)
+
+/******************************************************************************************************
+ * FUNCTION PROTOTYPES
+ *****************************************************************************************************/
 
 #ifdef __cplusplus
 extern "C" {

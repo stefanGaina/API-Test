@@ -7,15 +7,15 @@
 #######################################################################################################
 
 CXXFLAGS += `pkg-config --cflags glib-2.0`
-CFLAGS    = `pkg-config --cflags glib-2.0` -fno-inline -g -fprofile-arcs -ftest-coverage --coverage
+CFLAGS	 := `pkg-config --cflags glib-2.0` -fno-inline -g -fprofile-arcs -ftest-coverage --coverage
 LDFLAGS  += `pkg-config --libs glib-2.0`
 
-INCLUDES = -I../../../vendor/gtest/include \
-		   -I../../../apitest/include
+INCLUDES := -I../../../vendor/gtest/include \
+			-I../../../apitest/include
 
-TEST_FILE_NAME   := apitest_internal_test
+TEST_FILE_NAME	 := apitest_internal_test
 TESTED_FILE_NAME := apitest_internal
-EXECUTABLE       := apitest_internal_ut
+EXECUTABLE		 := apitest_internal_ut
 
 all: | create_dir $(EXECUTABLE)
 

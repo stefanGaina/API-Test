@@ -10,8 +10,8 @@ export OBJ := obj
 export LIB := lib
 export BIN := bin
 
-FORMAT            = clang-format -i
-COMPILATION_TIMER = cd vendor/Compilation-Timer && ./compilation-timer
+FORMAT			  := clang-format -i
+COMPILATION_TIMER := cd vendor/Compilation-Timer && ./compilation-timer
 
 ### MAKE SUBDIRECTORIES ###
 all: start_timer format build doxygen end_timer
