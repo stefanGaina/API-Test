@@ -16,78 +16,34 @@
  *****************************************************************************************************/
 
 /** ***************************************************************************************************
- * @file dummy_library.c
+ * @file ApiTest.hpp
  * @author Gaina Stefan
  * @date 02.06.2023
- * @brief This file implements the interface defined in dummy_library.h.
+ * @brief This file defines the type definitions and public interface of API-Test.
  * @todo N/A.
  * @bug No known bugs.
  *****************************************************************************************************/
+
+#ifndef APITEST_API_TEST_HPP_
+#define APITEST_API_TEST_HPP_
 
 /******************************************************************************************************
  * HEADER FILE INCLUDES
  *****************************************************************************************************/
 
-#include <stdio.h>
-
-#include "dummy_library.h"
+#include "details/Internal.hpp"
 
 /******************************************************************************************************
- * FUNCTION DEFINITIONS
+ * MACROS
  *****************************************************************************************************/
 
-void dummy_print_hello(void)
-{
-	(void)fprintf(stdout, "Hello!\n");
-}
+/** ***************************************************************************************************
+ * @brief TODO
+ * @param functionName: TODO
+ * @param VA_ARGS: TODO
+ * @returns N/A.
+ * @throws N/A.
+ *****************************************************************************************************/
+#define API_TEST(functionName, ...) API_TEST_INTERNAL(functionName, __VA_ARGS__)
 
-uint16_t dummy_digits_count(int64_t integer)
-{
-	uint16_t digits_count = 1U;
-
-	if (0L > integer)
-	{
-		integer *= -1L;
-	}
-
-	while (9L < integer)
-	{
-		integer /= 10L;
-		++digits_count;
-	}
-
-	return digits_count;
-}
-
-uint64_t dummy_string_length(const char* string)
-{
-	uint64_t string_length = 0UL;
-
-	if (nullptr == string)
-	{
-		return string_length;
-	}
-
-	while ('\0' != *string++)
-	{
-		++string_length;
-	}
-
-	return string_length;
-}
-
-double dummy_floor_round(const double point_number)
-{
-	int64_t floor = (int64_t)point_number;
-	return (double)floor;
-}
-
-int64_t dummy_add(const int32_t operand1, const int32_t operand2)
-{
-	return operand1 + operand2;
-}
-
-void dummy_bool_test(const bool boolean)
-{
-	(void)fprintf(stdout, "%s has been received!\n", true == boolean ? "true" : "false");
-}
+#endif /*< APITEST_API_TEST_HPP_ */

@@ -1,23 +1,5 @@
 # VSCode settings
 .vscode
 
-# Objects
-obj
-*.o
-
-# Libraries
-apitest/lib
-dummy-lib/lib
-
-# Executables
-test/bin
-
-# Unit-test
-# coverage_report
-*.gcno
-*.gcda
-*.gcov
-*.info
-
-# Compilation timer
-vendor/Compilation-Timer/time
+# Build
+build

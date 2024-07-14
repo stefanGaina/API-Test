@@ -16,10 +16,10 @@
  *****************************************************************************************************/
 
 /** ***************************************************************************************************
- * @file dummy_library.c
+ * @file Test.cpp
  * @author Gaina Stefan
  * @date 02.06.2023
- * @brief This file implements the interface defined in dummy_library.h.
+ * @brief This file is an example of a testing application based on API-Test.
  * @todo N/A.
  * @bug No known bugs.
  *****************************************************************************************************/
@@ -28,66 +28,44 @@
  * HEADER FILE INCLUDES
  *****************************************************************************************************/
 
-#include <stdio.h>
+#include <iostream>
+#include <print>
+#include <cstdio>
+#include <cinttypes>
 
+#include "ApiTest.hpp"
 #include "dummy_library.h"
 
 /******************************************************************************************************
  * FUNCTION DEFINITIONS
  *****************************************************************************************************/
 
-void dummy_print_hello(void)
+API_TEST(print_hello)
 {
-	(void)fprintf(stdout, "Hello!\n");
+	dummy_print_hello();
 }
 
-uint16_t dummy_digits_count(int64_t integer)
+API_TEST(digits_count, integer)
 {
-	uint16_t digits_count = 1U;
-
-	if (0L > integer)
-	{
-		integer *= -1L;
-	}
-
-	while (9L < integer)
-	{
-		integer /= 10L;
-		++digits_count;
-	}
-
-	return digits_count;
+	(void)printf("%s has %" PRIu16 " digits!\n", static_cast<const char*>(integer), dummy_digits_count(integer));
 }
 
-uint64_t dummy_string_length(const char* string)
+API_TEST(string_length, string)
 {
-	uint64_t string_length = 0UL;
-
-	if (nullptr == string)
-	{
-		return string_length;
-	}
-
-	while ('\0' != *string++)
-	{
-		++string_length;
-	}
-
-	return string_length;
+	std::cout << string << " has a length of " << dummy_string_length(string) << "!\n";
 }
 
-double dummy_floor_round(const double point_number)
+API_TEST(floor_round, point_number)
 {
-	int64_t floor = (int64_t)point_number;
-	return (double)floor;
+	std::println("{} floored is {}!", point_number, dummy_floor_round(point_number));
 }
 
-int64_t dummy_add(const int32_t operand1, const int32_t operand2)
+API_TEST(add, operand1, operand2)
 {
-	return operand1 + operand2;
+	std::println("{} added to {} is equal to {}!", operand1, operand2, dummy_add(operand1, operand2));
 }
 
-void dummy_bool_test(const bool boolean)
+API_TEST(bool_test, boolean)
 {
-	(void)fprintf(stdout, "%s has been received!\n", true == boolean ? "true" : "false");
+	dummy_bool_test(boolean);
 }

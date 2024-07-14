@@ -16,22 +16,22 @@
  *****************************************************************************************************/
 
 /** ***************************************************************************************************
- * @file dummy_library.c
+ * @file dummy_library.h
  * @author Gaina Stefan
  * @date 02.06.2023
  * @brief This file defines the public interface of dummy-lib.
- * @todo Extend interface to support testing of floating point numbers.
+ * @todo N/A.
  * @bug No known bugs.
  *****************************************************************************************************/
 
-#ifndef DUMMY_LIBRARY_H_
-#define DUMMY_LIBRARY_H_
+#ifndef DUMMY_LIB_DUMMY_LIBRARY_H_
+#define DUMMY_LIB_DUMMY_LIBRARY_H_
 
 /******************************************************************************************************
  * HEADER FILE INCLUDES
  *****************************************************************************************************/
 
-#include <glib.h>
+#include <stdint.h>
 
 /******************************************************************************************************
  * FUNCTION PROTOTYPES
@@ -42,28 +42,50 @@ extern "C" {
 #endif
 
 /** ***************************************************************************************************
+ * @brief Prints a "Hello!" message to the terminal.
+ * @param void
+ * @returns void
+ *****************************************************************************************************/
+extern void dummy_print_hello(void);
+
+/** ***************************************************************************************************
  * @brief Counts how many digits a number has.
  * @param integer: This functions tests the integer type.
- * @return How many digits the number has (not including the sign).
+ * @returns How many digits the number has (not including the sign).
  *****************************************************************************************************/
-extern guint16 dummy_digits_count(gint64 integer);
+[[nodiscard]] extern uint16_t dummy_digits_count(int64_t integer);
 
 /** ***************************************************************************************************
  * @brief Counts the length of a string.
  * @param string: This functions tests the string type.
- * @return How many characters does the string have (not including the NULL terminator).
+ * @returns How many characters does the string have (not including the NULL terminator).
  *****************************************************************************************************/
-extern guint64 dummy_string_length(const gchar* string);
+[[nodiscard]] extern uint64_t dummy_string_length(const char* string);
 
 /** ***************************************************************************************************
  * @brief Rounds a point number to the highest lesser integer.
  * @param point_number: This functions tests the floating point type.
- * @return The floored number.
+ * @returns The floored number.
  *****************************************************************************************************/
-extern gdouble dummy_floor_round(gdouble point_number);
+[[nodiscard]] extern double dummy_floor_round(double point_number);
+
+/** ***************************************************************************************************
+ * @brief Adds 2 numbers togheter.
+ * @param operand1: First operand.
+ * @param operand2: Second operand.
+ * @returns The sum of the 2 operands.
+ *****************************************************************************************************/
+[[nodiscard]] extern int64_t dummy_add(int32_t operand1, int32_t operand2);
+
+/** ***************************************************************************************************
+ * @brief Function to test boolean parameters.
+ * @param boolean: Parameter of boolean type.
+ * @returns void
+ *****************************************************************************************************/
+extern void dummy_bool_test(bool boolean);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /*< DUMMY_LIBRARY_H_ */
+#endif /*< DUMMY_LIB_DUMMY_LIBRARY_H_ */

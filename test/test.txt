@@ -1,9 +1,5 @@
-dummy_digits_count 123
-
+digits_count 123
 oops
-
-dummy_string_length "abcd abc"
-
-dummy_floor_round 123.12345
-
+string_length "abcd abc"
+floor_round 123.12345
 oops
