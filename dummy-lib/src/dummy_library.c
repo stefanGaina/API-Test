@@ -28,17 +28,18 @@
  * HEADER FILE INCLUDES
  *****************************************************************************************************/
 
-#include <stdio.h>
-
 #include "dummy_library.h"
 
 /******************************************************************************************************
  * FUNCTION DEFINITIONS
  *****************************************************************************************************/
 
-void dummy_print_hello(void)
+void dummy_print_hello(FILE* const stream)
 {
-	(void)fprintf(stdout, "Hello!\n");
+	if (stdout == stream || stderr == stream)
+	{
+		(void)fprintf(stdout, "Hello!\n");
+	}
 }
 
 uint16_t dummy_digits_count(int64_t integer)

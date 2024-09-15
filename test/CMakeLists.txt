@@ -14,6 +14,7 @@ include_directories(
 file(GLOB SOURCES "src/*.cpp")
 
 add_executable(${TEST_APP_NAME} ${SOURCES})
+target_compile_options(${TEST_APP_NAME} PRIVATE -DAPI_TEST_ARGUMENT_TYPE=ArgumentExtended)
 
 target_link_libraries(${TEST_APP_NAME} PRIVATE ${API_TEST_LIBRARY})
 target_link_libraries(${TEST_APP_NAME} PRIVATE ${DUMMY_LIBRARY})

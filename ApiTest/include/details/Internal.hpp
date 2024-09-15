@@ -11,7 +11,8 @@
 #include <type_traits>
 #include <cassert>
 
-#include "Argument.hpp"
+#include "../argument.hpp"
+#include "ArgumentCustom.hpp"
 
 /******************************************************************************************************
  * MACROS
@@ -27,11 +28,11 @@
 #define API_TEST_INTERNAL(functionName, ...)                                                                                                                       \
 	namespace functionName##ApiTestNamespaceArgument                                                                                                               \
 	{                                                                                                                                                              \
-		__VA_OPT__(static apitest::details::Argument __VA_ARGS__;)                                                                                                 \
+		__VA_OPT__(static API_TEST_ARGUMENT_TYPE __VA_ARGS__;)                                                                                                     \
 		static void functionName##ApiTestUserDefinition(void) noexcept(false);                                                                                     \
 		namespace functionName##ApiTestNamespaceFunction                                                                                                           \
 		{                                                                                                                                                          \
-			static void functionName##ApiTestFunction(const std::vector<apitest::details::Argument>& arguments) noexcept(false)                                    \
+			static void functionName##ApiTestFunction(const std::vector<apitest::argument>& arguments) noexcept(false)                                             \
 			{                                                                                                                                                      \
 				apitest::details::assignArguments(arguments __VA_OPT__(, __VA_ARGS__));                                                                            \
 				functionName##ApiTestUserDefinition();                                                                                                             \
@@ -51,7 +52,7 @@ namespace apitest
 /** ***************************************************************************************************
  * @brief The prototype of the generated function by the API_TEST() macro.
  *****************************************************************************************************/
-using FunctionPrototype = std::function<void(std::vector<details::Argument>&)>;
+using FunctionPrototype = std::function<void(std::vector<argument>&)>;
 
 namespace details
 {
@@ -91,18 +92,18 @@ private:
 /** ***************************************************************************************************
  * @brief Function used to transform the text inputted in the terminal into objects that can be used
  * by the user. It is meant only for internal use. It is thread-safe.
- * @tparam Args: Variable number of apitest::details::Argument objects.
+ * @tparam Args: Variable number of apitest::argument objects.
  * @param runtimeArguments: The text of the arguments that is got at runtime.
- * @param arguments: The apitest::details::Argument objects that are instantiated by the API_TEST()
+ * @param arguments: The apitest::argument objects that are instantiated by the API_TEST()
  * macro.
  * @throws std::bad_alloc: If making the arguments copies fails.
  *****************************************************************************************************/
 template<typename... Args>
-void assignArguments(const std::vector<Argument>& runtimeArguments, Args&... arguments) noexcept(false)
+void assignArguments(const std::vector<argument>& runtimeArguments, Args&... arguments) noexcept(false)
 {
 	size_t index = 0UL;
 
-	static_assert((std::is_convertible_v<Args, Argument> && ...), "All arguments must be convertible to apitest::details::Argument!");
+	static_assert((std::is_convertible_v<Args, argument> && ...), "All arguments must be convertible to apitest::argument!");
 	assert(runtimeArguments.size() == sizeof...(arguments));
 
 	((arguments = runtimeArguments[index++]), ...);

@@ -31,6 +31,7 @@
  * HEADER FILE INCLUDES
  *****************************************************************************************************/
 
+#include <stdio.h>
 #include <stdint.h>
 
 /******************************************************************************************************
@@ -43,10 +44,10 @@ extern "C" {
 
 /** ***************************************************************************************************
  * @brief Prints a "Hello!" message to the terminal.
- * @param void
+ * @param stream: The stream to which the message will be printe
  * @returns void
  *****************************************************************************************************/
-extern void dummy_print_hello(void);
+extern void dummy_print_hello(FILE* stream);
 
 /** ***************************************************************************************************
  * @brief Counts how many digits a number has.

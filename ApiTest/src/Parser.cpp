@@ -36,6 +36,8 @@
 #include <readline/history.h>
 
 #include "Parser.hpp"
+#include "invalid_argument.hpp"
+#include "out_of_range.hpp"
 
 /******************************************************************************************************
  * LOCAL VARIABLES
@@ -123,8 +125,8 @@ void Parser::registerFunction(const std::string& functionName, FunctionPrototype
 
 void Parser::handleCommand(const std::string& command) noexcept(false)
 {
-	std::vector<details::Argument> arguments	= {};
-	std::string					   functionName = {};
+	std::vector<argument> arguments	   = {};
+	std::string			  functionName = {};
 
 	if ("" == command)
 	{
@@ -173,11 +175,11 @@ void Parser::handleCommand(const std::string& command) noexcept(false)
 	{
 		getRegistry()[functionName].function(arguments);
 	}
-	catch (const std::invalid_argument& exception)
+	catch (const invalid_argument& exception)
 	{
 		std::println("Invalid argument! {}", exception.what());
 	}
-	catch (const std::out_of_range& exception)
+	catch (const out_of_range& exception)
 	{
 		std::println("Out of range! {}", exception.what());
 	}
@@ -195,13 +197,13 @@ void Parser::handleCommand(const std::string& command) noexcept(false)
 	}
 }
 
-std::vector<details::Argument> Parser::splitArguments(const std::string& command) noexcept(false)
+std::vector<argument> Parser::splitArguments(const std::string& command) noexcept(false)
 {
-	std::istringstream			   stringStream{ command };
-	std::vector<details::Argument> arguments	= {};
-	std::string					   currentWord	= {};
-	char						   character	= '\0';
-	bool						   insideQuotes = false;
+	std::istringstream	  stringStream{ command };
+	std::vector<argument> arguments	   = {};
+	std::string			  currentWord  = {};
+	char				  character	   = '\0';
+	bool				  insideQuotes = false;
 
 	while (stringStream.get(character))
 	{

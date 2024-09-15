@@ -83,7 +83,7 @@ private:
 	 * @returns The arguments splitted by white spaces and quotes.
 	 * @throws std::bad_alloc: If the appending of the arguments fails.
 	 *************************************************************************************************/
-	static std::vector<details::Argument> splitArguments(const std::string& command) noexcept(false);
+	static std::vector<argument> splitArguments(const std::string& command) noexcept(false);
 
 	/** ***********************************************************************************************
 	 * @brief This function is used to generate function name matches for rl_completion_matches. This

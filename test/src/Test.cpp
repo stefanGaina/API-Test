@@ -33,6 +33,7 @@
 #include <cstdio>
 #include <cinttypes>
 
+#include "ArgumentExtended.hpp"
 #include "ApiTest.hpp"
 #include "dummy_library.h"
 
@@ -40,14 +41,14 @@
  * FUNCTION DEFINITIONS
  *****************************************************************************************************/
 
-API_TEST(print_hello)
+API_TEST(print_hello, stream)
 {
-	dummy_print_hello();
+	dummy_print_hello(stream);
 }
 
 API_TEST(digits_count, integer)
 {
-	(void)printf("%s has %" PRIu16 " digits!\n", static_cast<const char*>(integer), dummy_digits_count(integer));
+	(void)fprintf(stdout, "%s has %" PRIu16 " digits!\n", static_cast<const char*>(integer), dummy_digits_count(integer));
 }
 
 API_TEST(string_length, string)
